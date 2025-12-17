@@ -27,7 +27,7 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
-
+g
       - name: Checkstyle
         run: ./gradlew --no-daemon checkstyleMain
 
