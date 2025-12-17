@@ -12,8 +12,8 @@ repositories {
 }
 
 ext {
-    junitVersion = '5.10.0'
-    assertjVersion = '3.25.3'
+    junitVersion = '5.11.0'
+    assertjVersion = '3.26.3'
 }
 
 dependencies {
