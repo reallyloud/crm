@@ -7,35 +7,36 @@ class ContactTest {
 
     @Test
     void shouldCreateContact_whenValidData() {
-        Contact contact = new Contact("John","Doe","john@example.com");
-        assertThat(contact.firstName()).isEqualTo("John");
-        assertThat(contact.lastName()).isEqualTo("Doe");
-        assertThat(contact.email()).isEqualTo("john@example.com");
-
-        // TODO: создать Contact с firstName="John", lastName="Doe", email="john@example.com"
-        // TODO: проверить что все геттеры возвращают правильные значения
+        Address address = new Address("Moscow","Street","zipka");
+        Contact contact = new Contact("mail@gmail.ru","86943067",address);
+        assertThat(contact.address()).isEqualTo(address);
+        assertThat(address.city()).isEqualTo(contact.address().city());
+        // TODO: создать Address
+        // TODO: создать Contact с email, phone, address
+        // TODO: проверить что contact.address() возвращает правильный Address
+        // TODO: проверить делегацию: contact.address().city() возвращает город
     }
 
     @Test
-    void shouldBeEqual_whenSameData() {
-        Contact contact1 = new Contact("John","Doe","john@example.com");
-        Contact contact2 = new Contact("John","Doe","john@example.com");
-        assertThat(contact2.equals(contact1)).isTrue();
-        assertThat(contact1.equals(contact2)).isTrue();
-        assertThat(contact1.hashCode() == contact2.hashCode()).isTrue();
-        // TODO: создать два Contact с одинаковыми данными
-        // TODO: проверить что они равны через equals
-        // TODO: проверить что hashCode одинаковый
+    void shouldDelegateToAddress_whenAccessingCity() {
+        Address address = new Address("Moscow","Street","zipka");
+        Contact contact = new Contact("mail@gmail.ru","86943067",address);
+
+        assertThat(contact.address().city()).isEqualTo("Moscow");
+        assertThat(contact.address().street()).isEqualTo("Street");
+
+        // TODO: создать Contact с Address
+        // TODO: проверить что contact.address().city() работает корректно
+        // TODO: проверить что contact.address().street() работает корректно
     }
 
     @Test
-    void shouldNotBeEqual_whenDifferentData() {
-        Contact contact1 = new Contact("John","Doe","john@example.com");
-        Contact contact2 = new Contact("Donald","Trump","trump@example.com");
-        assertThat(contact2.equals(contact1)).isFalse();
-        assertThat(contact1.equals(contact2)).isFalse();
-
-        // TODO: создать два Contact с разными данными
-        // TODO: проверить что они НЕ равны
+    void shouldThrowException_whenAddressIsNull() {
+        assertThatThrownBy(
+                () -> {
+                    Contact contact = new Contact("mila@mail.com","89694083",null);
+                }
+        ).isInstanceOf(IllegalArgumentException.class);
+        // TODO: проверить что создание Contact с address=null бросает IllegalArgumentException
     }
 }

@@ -3,55 +3,32 @@ package ru.mentee.power.crm.domain;
 import java.util.UUID;
 import java.util.Objects;
 
-public class Lead {
-    UUID id;
-    String email;
-    String phone;
-    String company;
-    String status;
-
-    public Lead(UUID id, String email, String phone, String company, String status) {
+public record Lead(UUID id, Contact contact, String company, String status) {
+    public Lead(UUID id, Contact contact, String company, String status) {
+        if (id == null || contact == null || status == null) {
+            throw new IllegalArgumentException();
+        }
+        if (!(status.equals("NEW") || status.equals("QUALIFIED") || status.equals("CONVERTED"))) {
+            throw new IllegalArgumentException();
+        }
         this.id = id;
-        this.email = email;
-        this.phone = phone;
+        this.contact = contact;
         this.company = company;
         this.status = status;
-    }
 
-    public UUID getId() {
-        return id;
-    }
+        // TODO: объявить record Lead с компонентами:
+//       - UUID id
+//       - Contact contact (композиция!)
+//       - String company
+//       - String status
+// TODO: добавить компактный конструктор с валидацией id, contact, status (не null)
+// TODO: добавить валидацию status (только "NEW", "QUALIFIED", "CONVERTED" разрешены)
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return "Lead{id = %s, email = %s, phone = %s, company = %s, status = %s }".
-                formatted(id, email, phone, company, status);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
         Lead lead = (Lead) o;
         return Objects.equals(id, lead.id);
     }
