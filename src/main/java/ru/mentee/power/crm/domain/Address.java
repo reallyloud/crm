@@ -11,6 +11,4 @@ public Address(String city,String street, String zip) {
     this.street = street;
     this.zip = zip;
 }
-// TODO: объявить record Address с компонентами city, street, zip (все String)
-// TODO: добавить компактный конструктор с валидацией (city и zip не должны быть null или пустыми)
 }

@@ -15,15 +15,6 @@ public record Lead(UUID id, Contact contact, String company, String status) {
         this.contact = contact;
         this.company = company;
         this.status = status;
-
-        // TODO: объявить record Lead с компонентами:
-//       - UUID id
-//       - Contact contact (композиция!)
-//       - String company
-//       - String status
-// TODO: добавить компактный конструктор с валидацией id, contact, status (не null)
-// TODO: добавить валидацию status (только "NEW", "QUALIFIED", "CONVERTED" разрешены)
-
     }
 
     @Override
