@@ -30,8 +30,5 @@ class CustomerTest {
 
         assertThat(customer.contact()).isEqualTo(lead.contact());
 
-        // TODO: создать одинаковый Contact (email, phone, address)
-        // TODO: использовать в Lead и Customer
-        // TODO: продемонстрировать что Contact переиспользуется без дублирования кода
     }
 }
