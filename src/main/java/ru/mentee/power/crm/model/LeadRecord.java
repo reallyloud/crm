@@ -1,6 +1,6 @@
 package ru.mentee.power.crm.model;
 
-public record Lead(
+public record LeadRecord(
         String id,
         String email,
         String phone,

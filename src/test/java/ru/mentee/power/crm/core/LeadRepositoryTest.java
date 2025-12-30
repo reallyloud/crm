@@ -104,13 +104,12 @@ class LeadRepositoryTest {
         long arrayListTime = System.nanoTime() - arrayListStart;
 
         assertThat(hashSetTime < arrayListTime).isTrue();
-        // TODO: Given - создать HashSet и ArrayList с 10000 одинаковых лидов
-        // TODO: When - выполнить contains() 1000 раз на каждой коллекции
-        // TODO: Then - замерить время, HashSet быстрее минимум в 100 раз
-
         // Подсказка: используйте System.nanoTime() для замера времени
         // long start = System.nanoTime();
         // ... операции ...
         // long duration = System.nanoTime() - start;
     }
+
+
+
 }
