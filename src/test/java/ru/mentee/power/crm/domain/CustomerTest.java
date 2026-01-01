@@ -1,6 +1,8 @@
 package ru.mentee.power.crm.domain;
 
 import org.junit.jupiter.api.Test;
+import ru.mentee.power.crm.model.LeadStatus;
+
 import java.util.UUID;
 import static org.assertj.core.api.Assertions.*;
 
@@ -26,7 +28,7 @@ class CustomerTest {
         Contact contact = new Contact("mail@gmail.ru","86943067",address);
 
         Customer customer = new Customer(UUID.randomUUID(),contact,address,"BRONZE");
-        Lead lead = new Lead(UUID.randomUUID(),contact,"comp","NEW");
+        Lead lead = new Lead(UUID.randomUUID(),contact,"comp", LeadStatus.NEW);
 
         assertThat(customer.contact()).isEqualTo(lead.contact());
 

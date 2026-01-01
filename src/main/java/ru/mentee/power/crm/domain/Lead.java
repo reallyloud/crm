@@ -1,20 +1,21 @@
 package ru.mentee.power.crm.domain;
 
+import ru.mentee.power.crm.model.LeadStatus;
+
 import java.util.UUID;
 import java.util.Objects;
 
-public record Lead(UUID id, Contact contact, String company, String status) {
-    public Lead(UUID id, Contact contact, String company, String status) {
+public record Lead(UUID id, Contact contact, String company, LeadStatus status) {
+    public Lead {
         if (id == null || contact == null || status == null) {
             throw new IllegalArgumentException();
         }
-        if (!(status.equals("NEW") || status.equals("QUALIFIED") || status.equals("CONVERTED"))) {
+        if (!(status == LeadStatus.NEW ||
+                status == LeadStatus.QUALIFIED ||
+                status == LeadStatus.CONVERTED ||
+                status == LeadStatus.CONTACTED)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
-        this.contact = contact;
-        this.company = company;
-        this.status = status;
     }
 
     @Override
@@ -28,4 +29,9 @@ public record Lead(UUID id, Contact contact, String company, String status) {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public String email() {
+        return this.contact.email();
+    }
+
 }

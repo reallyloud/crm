@@ -1,6 +1,7 @@
 package ru.mentee.power.crm.domain;
 
 import org.junit.jupiter.api.Test;
+import ru.mentee.power.crm.model.LeadStatus;
 
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ class LeadTest {
     void shouldCreateLead_whenValidData() {
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
         assertThat(lead.contact()).isEqualTo(contact);
     }
 
@@ -20,7 +21,7 @@ class LeadTest {
     void shouldAccessEmailThroughDelegation_whenLeadCreated() {
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         assertThat(lead.contact().email()).isEqualTo("mvfid@gmail.com");
         assertThat(lead.contact().address().city()).isEqualTo("Moscow");
@@ -33,8 +34,8 @@ class LeadTest {
         Contact contact2 = new Contact("mvfid@gmail.com", "76585659", address);
         UUID randomUUID = UUID.randomUUID();
 
-        Lead lead1 = new Lead(randomUUID, contact1, "comp", "NEW");
-        Lead lead2 = new Lead(randomUUID, contact2, "comp", "NEW");
+        Lead lead1 = new Lead(randomUUID, contact1, "comp", LeadStatus.NEW);
+        Lead lead2 = new Lead(randomUUID, contact2, "comp", LeadStatus.NEW);
 
         assertThat(lead1).isEqualTo(lead2);
     }
@@ -43,18 +44,7 @@ class LeadTest {
     void shouldThrowException_whenContactIsNull() {
         assertThatThrownBy(
                 () -> {
-                    Lead lead = new Lead(UUID.randomUUID(), null, "comp", "NEW");
-                }).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void shouldThrowException_whenInvalidStatus() {
-        Address address = new Address("Moscow", "Street", "zipka");
-        Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-
-        assertThatThrownBy(
-                () -> {
-                    Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "status");
+                    Lead lead = new Lead(UUID.randomUUID(), null, "comp", LeadStatus.NEW);
                 }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -62,7 +52,7 @@ class LeadTest {
     void shouldDemonstrateThreeLevelComposition_whenAccessingCity() {
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         assertThat(contact).isEqualTo(lead.contact());
         assertThat(address).isEqualTo(contact.address());

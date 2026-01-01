@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.model.LeadStatus;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,7 +21,7 @@ class LeadRepositoryTest {
         LeadRepository leadRepository = new LeadRepository();
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         boolean firstAdd = leadRepository.add(lead);
         boolean secondAdd = leadRepository.add(lead);
@@ -35,8 +36,8 @@ class LeadRepositoryTest {
         LeadRepository leadRepository = new LeadRepository();
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead1 = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
-        Lead lead2 = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead1 = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
+        Lead lead2 = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         boolean firstAdd = leadRepository.add(lead1);
         boolean secondAdd = leadRepository.add(lead2);
@@ -51,7 +52,7 @@ class LeadRepositoryTest {
         LeadRepository leadRepository = new LeadRepository();
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         leadRepository.add(lead);
 
@@ -64,7 +65,7 @@ class LeadRepositoryTest {
         LeadRepository leadRepository = new LeadRepository();
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         leadRepository.add(lead);
         Set<Lead> leadRepositoryCopy = leadRepository.findAll();
@@ -82,10 +83,10 @@ class LeadRepositoryTest {
         LeadRepository leadRepository = new LeadRepository();
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
 
         for (int i = 0; i < 10000; i++) {
-            lead = new Lead(UUID.randomUUID(), contact, "comp", "NEW");
+            lead = new Lead(UUID.randomUUID(), contact, "comp", LeadStatus.NEW);
             hashSet.add(lead);
             arrayList.add(lead);
         }
@@ -109,6 +110,7 @@ class LeadRepositoryTest {
         // ... операции ...
         // long duration = System.nanoTime() - start;
     }
+
 
 
 

@@ -1,9 +1,10 @@
 package ru.mentee.power.crm.model;
 
+import java.util.UUID;
+
 public record LeadRecord(
-        String id,
+        UUID id,
         String email,
-        String phone,
         String company,
         String status
 ) {
