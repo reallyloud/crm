@@ -1,23 +1,26 @@
 package ru.mentee.power.crm.repository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.model.LeadStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
-class LeadRepositoryTest {
-    private LeadRepository repository;
+class InMemoryLeadRepositoryTest {
+    private InMemoryLeadRepository repository;
 
     @BeforeEach
     void setUp() {
-        repository = new LeadRepository();
+        repository = new InMemoryLeadRepository();
     }
 
     @Test
@@ -25,14 +28,14 @@ class LeadRepositoryTest {
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
         UUID id = UUID.randomUUID();
-        Lead lead = new Lead(id, contact, "comp", "NEW");
+        Lead lead = new Lead(id, contact, "comp", LeadStatus.NEW);
         repository.save(lead);
         assertThat(repository.findById(id)).isNotNull();
     }
 
     @Test
     void shouldReturnNull_whenLeadNotFound() {
-        assertThat(repository.findById(UUID.randomUUID())).isNull();
+        assertThat(repository.findById(UUID.randomUUID())).isEmpty();
     }
 
     @Test
@@ -42,9 +45,9 @@ class LeadRepositoryTest {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
         UUID id3 = UUID.randomUUID();
-        Lead lead1 = new Lead(id1, contact, "comp", "NEW");
-        Lead lead2 = new Lead(id2, contact, "comp", "NEW");
-        Lead lead3 = new Lead(id3, contact, "comp", "NEW");
+        Lead lead1 = new Lead(id1, contact, "comp", LeadStatus.NEW);
+        Lead lead2 = new Lead(id2, contact, "comp", LeadStatus.NEW);
+        Lead lead3 = new Lead(id3, contact, "comp", LeadStatus.NEW);
         repository.save(lead1);
         repository.save(lead2);
         repository.save(lead3);
@@ -58,12 +61,12 @@ class LeadRepositoryTest {
         Address address = new Address("Moscow", "Street", "zipka");
         Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
         UUID id = UUID.randomUUID();
-        Lead lead = new Lead(id, contact, "comp", "NEW");
+        Lead lead = new Lead(id, contact, "comp", LeadStatus.NEW);
         repository.save(lead);
         repository.delete(id);
         List<Lead> copy = repository.findAll();
 
-        assertThat(repository.findById(id)).isNull();
+        assertThat(repository.findById(id).isEmpty()).isTrue();
         assertThat(copy).hasSize(0);
     }
 
@@ -74,13 +77,13 @@ class LeadRepositoryTest {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
 
-        Lead lead1 = new Lead(id1, contact, "comp", "NEW");
-        Lead lead2 = new Lead(id1, contact, "company2", "NEW");
+        Lead lead1 = new Lead(id1, contact, "comp", LeadStatus.NEW);
+        Lead lead2 = new Lead(id1, contact, "company2", LeadStatus.NEW);
 
         repository.save(lead1);
         repository.save(lead2);
 
-        assertThat(repository.findById(id1)).isEqualTo(lead2);
+        assertThat(repository.findById(id1).get()).isEqualTo(lead2);
 
     }
 
@@ -95,7 +98,7 @@ class LeadRepositoryTest {
                     "+7" + i,
                     new Address("City" + i, "Street" + i, "ZIP" + i)
             );
-            Lead lead = new Lead(id, contact, "Company" + i, "NEW");
+            Lead lead = new Lead(id, contact, "Company" + i, LeadStatus.NEW);
             repository.save(lead);
             leadList.add(lead);
         }
@@ -104,7 +107,7 @@ class LeadRepositoryTest {
 
         // When: Поиск через Map
         long mapStart = System.nanoTime();
-        Lead foundInMap = repository.findById(targetId);
+        Optional<Lead> foundInMap = repository.findById(targetId);
         long mapDuration = System.nanoTime() - mapStart;
 
         // When: Поиск через List.stream().filter()
@@ -116,7 +119,7 @@ class LeadRepositoryTest {
         long listDuration = System.nanoTime() - listStart;
 
         // Then: Map должен быть минимум в 10 раз быстрее
-        assertThat(foundInMap).isEqualTo(foundInList);
+        assertThat(foundInMap).isEqualTo(Optional.ofNullable(foundInList));
         assertThat(listDuration).isGreaterThan(mapDuration * 10);
 
         System.out.println("Map поиск: " + mapDuration + " ns");
@@ -125,12 +128,24 @@ class LeadRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should Find By Email")
+    void shouldFindByEmail() {
+        Address address = new Address("Moscow", "Street", "zipka");
+        Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
+        UUID id = UUID.randomUUID();
+        Lead lead = new Lead(id, contact, "comp", LeadStatus.NEW);
+
+        repository.save(lead);
+        assertThat(repository.findByEmail("mvfid@gmail.com").get()).isEqualTo(lead);
+    }
+
+    @Test
     void shouldSaveBothLeads_evenWithSameEmailAndPhone_becauseRepositoryDoesNotCheckBusinessRules() {
         // Given: два лида с разными UUID но одинаковыми контактами
         Contact sharedContact = new Contact("ivan@mail.ru", "+79001234567",
                 new Address("Moscow", "Tverskaya 1", "101000"));
-        Lead originalLead = new Lead(UUID.randomUUID(), sharedContact, "Acme Corp", "NEW");
-        Lead duplicateLead = new Lead(UUID.randomUUID(), sharedContact, "TechCorp", "QUALIFIED");
+        Lead originalLead = new Lead(UUID.randomUUID(), sharedContact, "Acme Corp", LeadStatus.NEW);
+        Lead duplicateLead = new Lead(UUID.randomUUID(), sharedContact, "TechCorp", LeadStatus.QUALIFIED);
 
         // When: сохраняем оба
         repository.save(originalLead);
