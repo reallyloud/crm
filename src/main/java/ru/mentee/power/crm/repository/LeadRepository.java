@@ -5,8 +5,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LeadRepository<Type> {
-    public void save(Type type);
+    public Type save(Type type);
     public void delete(UUID uuid);
     public Optional<Type> findById(UUID id);
     public List<Type> findAll();
+    public Optional<Type> findByEmail(String email);
 }

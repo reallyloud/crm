@@ -1,6 +1,7 @@
 package ru.mentee.power.crm.domain;
 
 import org.junit.jupiter.api.Test;
+import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 
 import java.util.UUID;

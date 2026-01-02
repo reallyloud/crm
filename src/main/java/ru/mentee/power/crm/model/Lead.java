@@ -1,6 +1,6 @@
-package ru.mentee.power.crm.domain;
+package ru.mentee.power.crm.model;
 
-import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.domain.Contact;
 
 import java.util.UUID;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package ru.mentee.power.crm.repository;
 
-import ru.mentee.power.crm.domain.Lead;
-import ru.mentee.power.crm.repository.LeadRepository;
+import ru.mentee.power.crm.model.Lead;
+
 
 import java.util.*;
 
@@ -9,9 +9,10 @@ public class InMemoryLeadRepository implements LeadRepository<Lead> {
     private final Map<UUID, Lead> storageUUID = new HashMap<>();
     private final Map<String, UUID> storageEmail = new HashMap<>();
 
-    public void save(Lead lead) {
+    public Lead save(Lead lead) {
         storageUUID.put(lead.id(), lead);
         storageEmail.put(lead.contact().email(), lead.id());
+        return lead;
     }
 
     public Optional<Lead> findById(UUID id) {
