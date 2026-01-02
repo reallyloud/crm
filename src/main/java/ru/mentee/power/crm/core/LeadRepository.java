@@ -1,6 +1,6 @@
 package ru.mentee.power.crm.core;
 
-import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.model.Lead;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Collections;

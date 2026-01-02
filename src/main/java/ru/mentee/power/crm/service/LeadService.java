@@ -1,13 +1,12 @@
 package ru.mentee.power.crm.service;
 
 
-import ru.mentee.power.crm.core.LeadRepository;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 
-import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
-import ru.mentee.power.crm.repository.InMemoryLeadRepository;
+import ru.mentee.power.crm.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,12 +14,17 @@ import java.util.UUID;
 
 public class LeadService {
 
-    private final InMemoryLeadRepository repository;
+    private final LeadRepository<Lead> repository;
 
     // DI через конструктор — не создаём repository внутри!
     public LeadService(InMemoryLeadRepository repository) {
         this.repository = repository;
     }
+
+    public LeadService(LeadRepository<Lead> repository) {
+        this.repository = repository;
+    }
+
 
     /**
      * Создаёт нового лида с проверкой уникальности email.
@@ -32,8 +36,8 @@ public class LeadService {
             throw new IllegalStateException("Лид с таким Email уже существует!");
         }
         Address address = new Address("Moscow", "Lubyanka", "zip");
-        Contact contact = new Contact(email,"899436964", address);
-        Lead lead = new Lead(UUID.randomUUID(),contact,company,status);
+        Contact contact = new Contact(email, "899436964", address);
+        Lead lead = new Lead(UUID.randomUUID(), contact, company, status);
         repository.save(lead);
         return lead;
     }
