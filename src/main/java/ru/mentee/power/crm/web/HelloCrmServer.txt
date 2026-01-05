@@ -51,7 +51,6 @@ public class HelloCrmServer {
         private String generateHtmlContent() {
             StringBuilder htmlBuilder = new StringBuilder();
 
-
             htmlBuilder.append("<!DOCTYPE html>\n");
             htmlBuilder.append("<html>\n");
             htmlBuilder.append("<head>\n");
