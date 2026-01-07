@@ -32,11 +32,9 @@ public class Main {
         tomcat.addServlet(context, "LeadListServlet", new LeadListServlet()); //
         context.addServletMappingDecoded("/leads", "LeadListServlet");
         tomcat.getConnector();
-        System.out.println(context.getServletContext().getAttribute("leadService"));
-
 
         tomcat.start();
-        System.out.println("Tomcat started on port 8080");
+        System.out.println("Tomcat started on port " + tomcat.getServer().getPort());
         System.out.println("Open http://localhost:8080/leads in browser");
         tomcat.getServer().await();
     }
