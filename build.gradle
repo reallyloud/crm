@@ -37,6 +37,7 @@ dependencies {
     implementation "gg.jte:jte-runtime:${jteVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    implementation "gg.jte:jte-spring-boot-starter-3:${jteVersion}"
 }
 
 application {
@@ -65,7 +66,7 @@ checkstyle {
 }
 
 jte {
-    sourceDirectory = file("src/main/jte").toPath()
+    sourceDirectory = file("src/main/resources/jte").toPath()
     contentType = "Html"
     binaryStaticContent = false
 }

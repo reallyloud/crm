@@ -1,22 +1,27 @@
-package ru.mentee.power.crm.service;
+package ru.mentee.power.crm.spring.service;
 
-
-import ru.mentee.power.crm.domain.Address;
-import ru.mentee.power.crm.domain.Contact;
-
-import ru.mentee.power.crm.model.Lead;
-import ru.mentee.power.crm.model.LeadStatus;
-import ru.mentee.power.crm.repository.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ru.mentee.power.crm.domain.Address;
+import ru.mentee.power.crm.domain.Contact;
+import ru.mentee.power.crm.model.Lead;
+import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
+import ru.mentee.power.crm.spring.repository.LeadRepository;
+
+@Service
 public class LeadService {
 
     private final LeadRepository<Lead> repository;
 
     // DI через конструктор — не создаём repository внутри!
+    @Autowired
     public LeadService(InMemoryLeadRepository repository) {
         this.repository = repository;
     }

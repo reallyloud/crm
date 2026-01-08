@@ -7,6 +7,7 @@ import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
 
 import java.util.ArrayList;
 import java.util.List;
