@@ -1,4 +1,4 @@
-package ru.mentee.power.crm.repository;
+package ru.mentee.power.crm.spring.repository;
 
 import java.util.List;
 import java.util.Optional;
