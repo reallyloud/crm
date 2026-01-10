@@ -12,10 +12,10 @@ import ru.mentee.power.crm.servlet.LeadListServlet;
 import java.io.File;
 
 public class Main {
+    public Tomcat tomcat = new Tomcat();
     public static void main(String[] args) throws Exception {
         LeadRepository<Lead> repository = new InMemoryLeadRepository(); // Создали репозиторий лидов
         LeadService leadService = new LeadService(repository); // Обернули его в бизнес логику лидов
-
         leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.QUALIFIED); // Положили туда лидов
         leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
         leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.NEW);
@@ -28,7 +28,7 @@ public class Main {
         // Создаем контекст на путь, заданный первым параметром. Во втором папка на диске, где хранится корневая директория проекта
 
         context.getServletContext().setAttribute("leadService", leadService); //Добавляем корневой контекст приложения
-        tomcat.addServlet(context, "LeadListServlet", new LeadListServlet()); //
+        Tomcat.addServlet(context, "LeadListServlet", new LeadListServlet()); //
         context.addServletMappingDecoded("/leads", "LeadListServlet");
         tomcat.getConnector();
 
