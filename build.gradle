@@ -4,6 +4,7 @@ plugins {
     id 'jacoco'
     id 'gg.jte.gradle' version '3.1.15'
     id 'org.springframework.boot' version '4.0.1'
+    id 'io.freefair.lombok' version '9.1.0'
 }
 
 group = 'ru.mentee.power'
@@ -46,11 +47,11 @@ application {
 
 
 tasks.named('bootRun') {
-    mainClass = 'ru.mentee.power.crm.spring.Application'
+    mainClass = 'ru.mentee.power.crm.spring.StartSpringServer'
 }
 
 tasks.named('bootJar') {
-    mainClass = 'ru.mentee.power.crm.spring.Application'
+    mainClass = 'ru.mentee.power.crm.spring.StartSpringServer'
 }
 
 java {

@@ -4,32 +4,23 @@ package ru.mentee.power.crm.spring.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
-import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
 @Service
+@RequiredArgsConstructor
 public class LeadService {
 
     private final LeadRepository<Lead> repository;
-
-    // DI через конструктор — не создаём repository внутри!
-    @Autowired
-    public LeadService(InMemoryLeadRepository repository) {
-        this.repository = repository;
-    }
-
-    public LeadService(LeadRepository<Lead> repository) {
-        this.repository = repository;
-    }
-
 
     /**
      * Создаёт нового лида с проверкой уникальности email.
@@ -53,6 +44,12 @@ public class LeadService {
 
     public Optional<Lead> findById(UUID id) {
         return repository.findById(id);
+    }
+
+    public List<Lead> findByStatus(LeadStatus status) {
+        Stream<Lead> stream = repository.findAll().stream();
+        return stream.filter(lead -> lead.status().equals(status))
+                .collect(Collectors.toList());
     }
 
     public Optional<Lead> findByEmail(String email) {
