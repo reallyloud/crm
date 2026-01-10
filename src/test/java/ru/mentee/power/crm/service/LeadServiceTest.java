@@ -102,4 +102,93 @@ class LeadServiceTest {
         // Then
         assertThat(result).isEmpty();
     }
+
+    @Test
+    void shouldReturnOnlyNewLeads_whenFindByStatusNew() {
+        //Given
+        LeadService leadService = new LeadService(new InMemoryLeadRepository());
+        leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.NEW); // Положили туда лидов
+        leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
+        leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.NEW);
+        leadService.addLead("auto@gmail.com", "granta", LeadStatus.CONTACTED);
+        leadService.addLead("omaigad@gmail.com", "pepa", LeadStatus.CONTACTED);
+        leadService.addLead("шнейнепепа@gmail.com", "watawa", LeadStatus.CONTACTED);
+        leadService.addLead("OOO@gaddem.com", "gangster", LeadStatus.CONTACTED);
+        leadService.addLead("drake@gmail.com", "toosieslide", LeadStatus.CONTACTED);
+        leadService.addLead("bigbabytape@gaddem.com", "dragonborn", LeadStatus.QUALIFIED);
+        leadService.addLead("super@gmail.com", "man", LeadStatus.QUALIFIED);
+
+        //When
+        List<Lead> result = leadService.findByStatus(LeadStatus.NEW);
+
+        //Then
+        assertThat(result).hasSize(3);
+        assertThat(result).allMatch(lead -> lead.status().equals(LeadStatus.NEW));
+    }
+
+    @Test
+    void shouldReturnEmptyList_whenNoLeadsWithStatus() {
+        //Given
+        LeadService leadService = new LeadService(new InMemoryLeadRepository());
+        leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.NEW); // Положили туда лидов
+        leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
+        leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.NEW);
+        leadService.addLead("auto@gmail.com", "granta", LeadStatus.CONTACTED);
+        leadService.addLead("omaigad@gmail.com", "pepa", LeadStatus.CONTACTED);
+        leadService.addLead("шнейнепепа@gmail.com", "watawa", LeadStatus.CONTACTED);
+        leadService.addLead("OOO@gaddem.com", "gangster", LeadStatus.CONTACTED);
+        leadService.addLead("drake@gmail.com", "toosieslide", LeadStatus.CONTACTED);
+
+        //When
+        List<Lead> result = leadService.findByStatus(LeadStatus.QUALIFIED);
+
+        //Then
+        assertThat(result).hasSize(0);
+    }
+
+    @Test
+    void shouldReturnOnlyNewLeads_whenFindByStatusContacted() {
+        //Given
+        LeadService leadService = new LeadService(new InMemoryLeadRepository());
+        leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.NEW); // Положили туда лидов
+        leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
+        leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.NEW);
+        leadService.addLead("auto@gmail.com", "granta", LeadStatus.CONTACTED);
+        leadService.addLead("omaigad@gmail.com", "pepa", LeadStatus.CONTACTED);
+        leadService.addLead("шнейнепепа@gmail.com", "watawa", LeadStatus.CONTACTED);
+        leadService.addLead("OOO@gaddem.com", "gangster", LeadStatus.CONTACTED);
+        leadService.addLead("drake@gmail.com", "toosieslide", LeadStatus.CONTACTED);
+        leadService.addLead("bigbabytape@gaddem.com", "dragonborn", LeadStatus.QUALIFIED);
+        leadService.addLead("super@gmail.com", "man", LeadStatus.QUALIFIED);
+
+        //When
+        List<Lead> result = leadService.findByStatus(LeadStatus.CONTACTED);
+
+        //Then
+        assertThat(result).hasSize(5);
+        assertThat(result).allMatch(lead -> lead.status().equals(LeadStatus.CONTACTED));
+    }
+
+    @Test
+    void shouldReturnOnlyNewLeads_whenFindByStatusQualified() {
+        //Given
+        LeadService leadService = new LeadService(new InMemoryLeadRepository());
+        leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.NEW); // Положили туда лидов
+        leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
+        leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.NEW);
+        leadService.addLead("auto@gmail.com", "granta", LeadStatus.CONTACTED);
+        leadService.addLead("omaigad@gmail.com", "pepa", LeadStatus.CONTACTED);
+        leadService.addLead("шнейнепепа@gmail.com", "watawa", LeadStatus.CONTACTED);
+        leadService.addLead("OOO@gaddem.com", "gangster", LeadStatus.CONTACTED);
+        leadService.addLead("drake@gmail.com", "toosieslide", LeadStatus.CONTACTED);
+        leadService.addLead("bigbabytape@gaddem.com", "dragonborn", LeadStatus.QUALIFIED);
+        leadService.addLead("super@gmail.com", "man", LeadStatus.QUALIFIED);
+
+        //When
+        List<Lead> result = leadService.findByStatus(LeadStatus.QUALIFIED);
+
+        //Then
+        assertThat(result).hasSize(2);
+        assertThat(result).allMatch(lead -> lead.status().equals(LeadStatus.QUALIFIED));
+    }
 }

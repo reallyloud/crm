@@ -4,6 +4,8 @@ package ru.mentee.power.crm.spring.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,12 @@ public class LeadService {
 
     public Optional<Lead> findById(UUID id) {
         return repository.findById(id);
+    }
+
+    public List<Lead> findByStatus(LeadStatus status) {
+        Stream<Lead> stream = repository.findAll().stream();
+        return stream.filter(lead -> lead.status().equals(status))
+                .collect(Collectors.toList());
     }
 
     public Optional<Lead> findByEmail(String email) {

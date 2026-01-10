@@ -47,11 +47,11 @@ application {
 
 
 tasks.named('bootRun') {
-    mainClass = 'ru.mentee.power.crm.spring.Application'
+    mainClass = 'ru.mentee.power.crm.spring.StartSpringServer'
 }
 
 tasks.named('bootJar') {
-    mainClass = 'ru.mentee.power.crm.spring.Application'
+    mainClass = 'ru.mentee.power.crm.spring.StartSpringServer'
 }
 
 java {

@@ -39,12 +39,18 @@ class StackComparisonTest {
         httpClient = HttpClient.newHttpClient();
     }
 
-
     @Test
     @DisplayName("Оба стека должны возвращать лидов в HTML таблице")
     void shouldReturnLeadsFromBothStacks() throws Exception {
 
+        ServletServer servletServer = new ServletServer();
+        Application springServer = new Application();
+
+        servletServer.start();
+        springServer.start();
         // Given: HTTP запросы к обоим стекам и открываем серверы
+
+
         HttpRequest servletRequest = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + SERVLET_PORT + "/leads"))
                 .GET()
@@ -71,6 +77,9 @@ class StackComparisonTest {
 
         assertThat(countTableRows(servletResponse.body(), "<tr>"))
                 .isEqualTo(countTableRows(springResponse.body(), "<tr>"));
+
+        servletServer.stop();
+        springServer.stop();
     }
 
     public static int countTableRows(String text, String substring) {
@@ -110,12 +119,15 @@ class StackComparisonTest {
 
     private long measureServletStartup() throws LifecycleException {
         long startTime = System.nanoTime();
+
         Tomcat tomcat = new Tomcat();
-        tomcat.getServer().setPort(8084);
+        tomcat.getServer().setPort(8082);
         tomcat.getServer().start();
+
         long startupTime = (System.nanoTime() - startTime) / 1_000_000L;
         tomcat.getServer().stop();
-
+        tomcat.getServer().destroy();
+        tomcat.destroy();
         return startupTime;
     }
 
@@ -132,6 +144,3 @@ class StackComparisonTest {
         return startupTime;
     }
 }
-
-
-
