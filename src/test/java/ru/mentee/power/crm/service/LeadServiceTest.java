@@ -35,7 +35,7 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.contact().email()).isEqualTo(email);
+        assertThat(result.email()).isEqualTo(email);
         assertThat(result.company()).isEqualTo(company);
         assertThat(result.status()).isEqualTo(status);
         assertThat(result.id()).isNotNull();
@@ -78,7 +78,7 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get().contact().email()).isEqualTo("find@example.com");
+        assertThat(result.get().email()).isEqualTo("find@example.com");
     }
 
     @Test
