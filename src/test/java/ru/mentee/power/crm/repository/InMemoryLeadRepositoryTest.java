@@ -131,13 +131,12 @@ class InMemoryLeadRepositoryTest {
     @Test
     @DisplayName("Should Find By Email")
     void shouldFindByEmail() {
-        Address address = new Address("Moscow", "Street", "zipka");
-        Contact contact = new Contact("mvfid@gmail.com", "76585659", address);
-        UUID id = UUID.randomUUID();
-        Lead lead = new Lead(id, contact, "comp", LeadStatus.NEW);
+
+        Lead lead = new Lead(UUID.randomUUID(), "email@mail.ru", "comp", LeadStatus.NEW);
 
         repository.save(lead);
-        assertThat(repository.findByEmail("mvfid@gmail.com").get()).isEqualTo(lead);
+
+        assertThat(repository.findByEmail("email@mail.ru").get()).isEqualTo(lead);
     }
 
     @Test

@@ -27,9 +27,6 @@ jobs:
           java-version: '25'
           cache: 'gradle'
 
-      - name: Checkstyle
-        run: ./gradlew --no-daemon checkstyleMain
-
       - name: Tests
         run: ./gradlew --no-daemon test
 

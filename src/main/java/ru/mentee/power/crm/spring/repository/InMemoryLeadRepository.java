@@ -17,7 +17,7 @@ public class InMemoryLeadRepository implements LeadRepository<Lead> {
 
     public Lead save(Lead lead) {
         storageUUID.put(lead.id(), lead);
-        storageEmail.put(lead.contact().email(), lead.id());
+        storageEmail.put(lead.email(), lead.id());
         return lead;
     }
 

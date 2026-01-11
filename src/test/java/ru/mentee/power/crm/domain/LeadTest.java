@@ -41,13 +41,6 @@ class LeadTest {
         assertThat(lead1).isEqualTo(lead2);
     }
 
-    @Test
-    void shouldThrowException_whenContactIsNull() {
-        assertThatThrownBy(
-                () -> {
-                    Lead lead = new Lead(UUID.randomUUID(), null, "comp", LeadStatus.NEW);
-                }).isInstanceOf(IllegalArgumentException.class);
-    }
 
     @Test
     void shouldDemonstrateThreeLevelComposition_whenAccessingCity() {

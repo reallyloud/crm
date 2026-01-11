@@ -31,9 +31,7 @@ public class LeadService {
         if (repository.findByEmail(email).isPresent()) {
             throw new IllegalStateException("Лид с таким Email уже существует!");
         }
-        Address address = new Address("Moscow", "Lubyanka", "zip");
-        Contact contact = new Contact(email, "899436964", address);
-        Lead lead = new Lead(UUID.randomUUID(), contact, company, status);
+        Lead lead = new Lead(UUID.randomUUID(), email, company, status);
         repository.save(lead);
         return lead;
     }
