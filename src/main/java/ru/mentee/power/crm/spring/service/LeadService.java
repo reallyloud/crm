@@ -7,7 +7,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ru.mentee.power.crm.domain.Address;
@@ -17,9 +20,9 @@ import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
 @Service
-@RequiredArgsConstructor
 public class LeadService {
 
+    private static final Logger log = LoggerFactory.getLogger(LeadService.class);
     private final LeadRepository<Lead> repository;
 
     /**
@@ -27,6 +30,12 @@ public class LeadService {
      *
      * @throws IllegalStateException если лид с таким email уже существует
      */
+
+    public LeadService(LeadRepository<Lead> repository) {
+        this.repository = repository;
+        log.info("LeadService constructor called");
+    }
+
     public Lead addLead(String email, String company, LeadStatus status) {
         if (repository.findByEmail(email).isPresent()) {
             throw new IllegalStateException("Лид с таким Email уже существует!");
@@ -52,6 +61,11 @@ public class LeadService {
 
     public Optional<Lead> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    @PostConstruct
+    void init() {
+        log.info("LeadService @PostConstruct init() called - Bean lifecycle phase");
     }
 
 }

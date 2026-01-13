@@ -22,6 +22,10 @@
            class="px-4 py-2 rounded ${currentFilter == LeadStatus.QUALIFIED ? "bg-blue-500 text-white" : "bg-gray-200"}">
             QUALIFIED
         </a>
+        <a href="/leads?status=DONE"
+           class="px-4 py-2 rounded ${currentFilter == LeadStatus.DONE ? "bg-blue-500 text-white" : "bg-gray-200"}">
+            DONE
+        </a>
     </div>
 
 </div>
