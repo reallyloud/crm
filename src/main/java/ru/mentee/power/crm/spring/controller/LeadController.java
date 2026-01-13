@@ -49,7 +49,6 @@ public class LeadController {
     public String createLead(@ModelAttribute Lead lead) {
         initLeadService();
 
-
         leadService.addLead(lead.email(), lead.company(), lead.status());
 
         return "redirect:/leads";
@@ -66,5 +65,6 @@ public class LeadController {
         leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.CONTACTED);
         leadService.addLead("auto@gmail.com", "granta", LeadStatus.NEW);
         leadService.addLead("bilbobeggins@gmail.com", "hobbit", LeadStatus.NEW);
+        leadService.addLead("fdsfdsg@gmail.com", "yandex", LeadStatus.DONE);
     }
 }
