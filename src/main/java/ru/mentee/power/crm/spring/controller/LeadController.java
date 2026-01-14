@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.spring.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +15,11 @@ import ru.mentee.power.crm.spring.service.LeadService;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class LeadController {
 
     private final LeadService leadService;
-    private boolean isInitializated;
-
-
-    public LeadController(LeadService leadService) {
-        this.leadService = leadService;
-    }
+    private boolean isInitialized;
 
     @GetMapping("/leads")
     public String showLeads(@RequestParam(required = false) LeadStatus status, Model model) {
@@ -55,10 +52,10 @@ public class LeadController {
     }
 
     private void initLeadService() {
-        if (isInitializated) {
+        if (isInitialized) {
             return;
         } else
-            isInitializated = true;
+            isInitialized = true;
 
         leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.QUALIFIED); // Положили туда лидов
         leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
@@ -66,5 +63,9 @@ public class LeadController {
         leadService.addLead("auto@gmail.com", "granta", LeadStatus.NEW);
         leadService.addLead("bilbobeggins@gmail.com", "hobbit", LeadStatus.NEW);
         leadService.addLead("fdsfdsg@gmail.com", "yandex", LeadStatus.DONE);
+    }
+
+    public LeadService getService() {
+        return this.leadService;
     }
 }
