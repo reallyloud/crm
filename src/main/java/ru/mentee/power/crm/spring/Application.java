@@ -7,8 +7,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class Application {
     private ConfigurableApplicationContext context;
-    public void start() {
+    public ConfigurableApplicationContext start() {
         context = SpringApplication.run(Application.class);
+        return context;
     }
 
     public void stop() {
