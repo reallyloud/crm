@@ -6,7 +6,11 @@ import ru.mentee.power.crm.domain.Contact;
 import java.util.UUID;
 import java.util.Objects;
 
-public record Lead(UUID id, Contact contact, String company, LeadStatus status, String email) {
+public record Lead(UUID id, Contact contact, String company, LeadStatus status, String email, String phone) {
+    public Lead {
+    }
+
+
     public Lead (UUID id, Contact contact, String company, LeadStatus status){
         if (status == null || company == null) {
             throw new IllegalArgumentException();
@@ -18,7 +22,7 @@ public record Lead(UUID id, Contact contact, String company, LeadStatus status, 
             throw new IllegalArgumentException();
         }
 
-        this(id, contact,company, status, "");
+        this(id, contact,company, status, "","");
     }
 
     public Lead (UUID uuid, String email, String company, LeadStatus status) {
@@ -28,9 +32,8 @@ public record Lead(UUID id, Contact contact, String company, LeadStatus status, 
         Address address = new Address("","","");
         Contact contact = new Contact("","",address);
 
-        this(uuid,contact,company,status, email);
+        this(uuid,contact,company,status, email,"");
     }
-
 
     @Override
     public boolean equals(Object o) {

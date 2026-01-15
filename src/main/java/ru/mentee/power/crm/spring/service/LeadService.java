@@ -49,6 +49,33 @@ public class LeadService {
         return repository.findAll();
     }
 
+    public void update (String id, Lead lead){
+        UUID uuid = UUID.fromString(id);
+        if (repository.findById(uuid).isEmpty()) {
+            throw new NullPointerException("Лид, который вы хотите поменять отсутствует");
+        }
+        Lead outDatedLead = repository.findById(uuid).get();
+        Address address = new Address("","","");
+        Contact contact = new Contact(
+                    lead.email(),
+                    lead.phone(),
+                    address
+        );
+
+        Lead newLead = new Lead(
+                outDatedLead.id(),
+                contact,
+                outDatedLead.company(),
+                lead.status(),
+                lead.email(),
+                lead.phone()
+        );
+
+        repository.delete(outDatedLead.id());
+        repository.save(newLead);
+
+    }
+
     public Optional<Lead> findById(UUID id) {
         return repository.findById(id);
     }
