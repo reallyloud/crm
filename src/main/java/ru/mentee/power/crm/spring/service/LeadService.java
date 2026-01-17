@@ -11,8 +11,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.model.Lead;
@@ -93,6 +95,13 @@ public class LeadService {
     @PostConstruct
     void init() {
         log.info("LeadService @PostConstruct init() called - Bean lifecycle phase");
+    }
+
+    public void delete(UUID id) {
+        if(repository.findById(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        repository.delete(id);
     }
 
 }
