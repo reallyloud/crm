@@ -22,18 +22,15 @@ public class LeadController {
     private boolean isInitialized;
 
     @GetMapping("/leads")
-    public String showLeads(@RequestParam(required = false) LeadStatus status, Model model) {
+    public String listLeads(@RequestParam(required = false) String search,
+                            @RequestParam(required=false) String status,
+                            Model model) {
         initLeadService();
-        List<Lead> leadList = leadService.findAll();
-        if (status != null) {
-            leadList = leadService.findByStatus(status);
-        }
+        List<Lead> leads = leadService.findLeads(search,status);
+        model.addAttribute("search", search != null ? search : "");
+        model.addAttribute("leads", leads);
 
-        // Кладём атрибут leads в jte:
-        model.addAttribute("currentFilter", status);
-        model.addAttribute("leads", leadList);
-        // Возвращаем адрес этого jte файла, в который мы кладем leadList:
-        return "leads/list";
+                return "leads/list";
     }
 
     @PostMapping("/leads/{id}")

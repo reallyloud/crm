@@ -1,6 +1,7 @@
 package ru.mentee.power.crm.spring.service;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -97,11 +98,29 @@ public class LeadService {
         log.info("LeadService @PostConstruct init() called - Bean lifecycle phase");
     }
 
+    public List<Lead> findLeads (String search, String status) {
+        Stream<Lead> leadStream = repository.findAll().stream();
+        if (search != null && !search.isEmpty()) {
+            leadStream = leadStream.filter(lead -> lead.email().toLowerCase().contains(search));
+        }
+        if (status != null && status.equals("По статусу")) {
+            leadStream = leadStream.filter(lead -> lead.status().equals(LeadStatus.valueOf(status)));
+        }
+        return leadStream.collect(Collectors.toList());
+    }
+
     public void delete(UUID id) {
         if(repository.findById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         repository.delete(id);
+    }
+
+    public void clear() {
+        List<Lead> leads = repository.findAll();
+        for (Lead lead : leads) {
+            repository.delete(lead.id());
+        }
     }
 
 }
