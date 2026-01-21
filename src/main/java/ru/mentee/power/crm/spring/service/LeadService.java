@@ -48,6 +48,14 @@ public class LeadService {
         return lead;
     }
 
+    public Lead addLead(Lead lead) {
+        if (repository.findByEmail(lead.email()).isPresent()) {
+            throw new IllegalStateException("Лид с таким Email уже существует!");
+        }
+        repository.save(lead);
+        return lead;
+    }
+
     public List<Lead> findAll() {
         return repository.findAll();
     }
@@ -68,10 +76,11 @@ public class LeadService {
         Lead newLead = new Lead(
                 outDatedLead.id(),
                 contact,
-                outDatedLead.company(),
+                lead.company(),
                 lead.status(),
                 lead.email(),
-                lead.phone()
+                lead.phone(),
+                lead.name()
         );
 
         repository.delete(outDatedLead.id());

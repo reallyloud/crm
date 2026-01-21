@@ -1,17 +1,27 @@
 package ru.mentee.power.crm.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 
 import java.util.UUID;
 import java.util.Objects;
 
-public record Lead(UUID id, Contact contact, String company, LeadStatus status, String email, String phone) {
+public record Lead(UUID id,
+                   Contact contact,
+                   String company,
+                   @NotNull(message = "Статус обязателен")LeadStatus status,
+                   @NotBlank(message = "Email обязателен") @Email(message = "Некорректный формат email") String email,
+                   @NotBlank(message = "Телефон обязателен") String phone,
+                   @NotBlank(message = "Имя обязательно") String name
+) {
     public Lead {
     }
 
 
-    public Lead (UUID id, Contact contact, String company, LeadStatus status){
+    public Lead(UUID id, Contact contact, String company, LeadStatus status) {
         if (status == null || company == null) {
             throw new IllegalArgumentException();
         }
@@ -22,17 +32,17 @@ public record Lead(UUID id, Contact contact, String company, LeadStatus status, 
             throw new IllegalArgumentException();
         }
 
-        this(id, contact,company, status, "","");
+        this(id, contact, company, status, "NoEmail", "NoPhone", "NoName");
     }
 
-    public Lead (UUID uuid, String email, String company, LeadStatus status) {
+    public Lead(UUID uuid, String email, String company, LeadStatus status) {
         if (email == null || company == null || status == null) {
             throw new IllegalArgumentException();
         }
-        Address address = new Address("","","");
-        Contact contact = new Contact("","",address);
+        Address address = new Address("", "", "");
+        Contact contact = new Contact("", "", address);
 
-        this(uuid,contact,company,status, email,"");
+        this(uuid, contact, company, status, email, "NoPhone", "NoName");
     }
 
     @Override

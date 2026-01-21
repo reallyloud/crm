@@ -107,4 +107,37 @@ class LeadControllerTest {
                 .andExpect(model().attribute("leads",expectedLeads))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void shouldReturnFormWithFieldErrorName() throws Exception {
+        mockMvc.perform(post("/leads")
+                .param("name", "").param("email", "test@test.com"))
+                .andExpect(view().name("leads/createForm"))
+                .andExpect(model().attributeHasFieldErrors("lead", "name"));
+    }
+
+    @Test
+    void shouldReturnFormWithFieldErrorEmail() throws Exception {
+        mockMvc.perform(post("/leads")
+                .param("email", "invalidemail"))
+                .andExpect(model().attributeHasFieldErrorCode("lead", "email", "Email"));
+    }
+
+    @Test
+    void allFieldsValid() throws Exception {
+        mockMvc.perform(post("/leads")
+                .param("email", "example@gmial.com")
+                .param("status","NEW")
+                .param("phone","52364")
+                .param("name","name"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/leads"));
+
+    }
+
+
+
+
+
+
 }

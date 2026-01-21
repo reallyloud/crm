@@ -21,9 +21,13 @@ ext {
     assertjVersion = '3.25.3'
     servletVersion = '6.1.0'
     tomcatVersion = '11.0.1'
+    validationApiVersion = '3.0.2'
+    hibernateValidatorVersion = '8.0.2.Final'
+
 }
 
 dependencies {
+
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
@@ -34,6 +38,10 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
     testImplementation 'net.bytebuddy:byte-buddy:1.15.4'
     testImplementation 'net.bytebuddy:byte-buddy-agent:1.15.4'
+
+    implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
+    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+
     implementation "jakarta.servlet:jakarta.servlet-api:${servletVersion}"
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
     implementation "gg.jte:jte:${jteVersion}"

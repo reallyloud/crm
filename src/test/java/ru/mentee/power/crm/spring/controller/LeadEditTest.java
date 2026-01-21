@@ -64,7 +64,9 @@ class LeadEditTest {
         mockMvc.perform(post("/leads/{id}", leadId)
                         .param("email", "new@example.com")
                         .param("company", "NewCompany")
-                        .param("status", "CONTACTED"))
+                        .param("status", "CONTACTED")
+                        .param("name","name")
+                        .param("phone","6789436"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/leads"));
 
