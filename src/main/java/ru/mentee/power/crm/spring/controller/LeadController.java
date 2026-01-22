@@ -1,11 +1,15 @@
 package ru.mentee.power.crm.spring.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.domain.Address;
+import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
@@ -22,23 +26,29 @@ public class LeadController {
     private boolean isInitialized;
 
     @GetMapping("/leads")
-    public String showLeads(@RequestParam(required = false) LeadStatus status, Model model) {
+    public String listLeads(@RequestParam(required = false) String search, @RequestParam(required = false) String status, Model model) {
         initLeadService();
-        List<Lead> leadList = leadService.findAll();
-        if (status != null) {
-            leadList = leadService.findByStatus(status);
-        }
+        List<Lead> leads = leadService.findLeads(search, status);
+        model.addAttribute("search", search != null ? search : "");
+        model.addAttribute("leads", leads);
 
-        // Кладём атрибут leads в jte:
-        model.addAttribute("currentFilter", status);
-        model.addAttribute("leads", leadList);
-        // Возвращаем адрес этого jte файла, в который мы кладем leadList:
         return "leads/list";
     }
 
     @PostMapping("/leads/{id}")
-    public String updateLead(@PathVariable String id, @ModelAttribute Lead lead) {
-        leadService.update(id,lead);
+    public String updateLead(@PathVariable String id,@Valid @ModelAttribute Lead lead, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("lead",lead);
+            model.addAttribute("leadErrors",result);
+            return "leads/form";
+        }
+        leadService.update(id, lead);
+        return "redirect:/leads";
+    }
+
+    @PostMapping("/leads/{id}/delete")
+    public String deleteLead(@PathVariable UUID id) {
+        leadService.delete(id);
         return "redirect:/leads";
     }
 
@@ -61,10 +71,16 @@ public class LeadController {
 
 
     @PostMapping("/leads")
-    public String createLead(@ModelAttribute Lead lead) {
+    public String createLead(@Valid @ModelAttribute Lead lead, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            model.addAttribute("lead",lead);
+            model.addAttribute("errors",result);
+
+            return "leads/createForm";
+        }
         initLeadService();
 
-        leadService.addLead(lead.email(), lead.company(), lead.status());
+        leadService.addLead(lead);
 
         return "redirect:/leads";
     }
@@ -72,15 +88,27 @@ public class LeadController {
     private void initLeadService() {
         if (isInitialized) {
             return;
-        } else
-            isInitialized = true;
+        } else isInitialized = true;
 
-        leadService.addLead("maximalen1999@gmail.com", "yandex", LeadStatus.QUALIFIED); // Положили туда лидов
-        leadService.addLead("oleg@gmail.com", "google", LeadStatus.NEW);
-        leadService.addLead("gennadiy@gmail.com", "lada", LeadStatus.CONTACTED);
-        leadService.addLead("auto@gmail.com", "granta", LeadStatus.NEW);
-        leadService.addLead("bilbobeggins@gmail.com", "hobbit", LeadStatus.NEW);
-        leadService.addLead("fdsfdsg@gmail.com", "yandex", LeadStatus.DONE);
+        Lead lead1 = new Lead(UUID.randomUUID(),new Contact("","",new Address("","",""))
+                ,"yandex",LeadStatus.QUALIFIED, "maximalen1999@gmail.com","895348956","Максим");
+        Lead lead2 = new Lead(UUID.randomUUID(),new Contact("","",new Address("","",""))
+                ,"google",LeadStatus.NEW, "oleg@gmail.com","896431531","Олег");
+        Lead lead3 = new Lead(UUID.randomUUID(),new Contact("","",new Address("","",""))
+                ,"lada",LeadStatus.CONTACTED, "gennadiy@gmail.com","85489675865","Геннадий");
+        Lead lead4 = new Lead(UUID.randomUUID(),new Contact("","",new Address("","",""))
+                ,"granta",LeadStatus.NEW, "auto@gmail.com","895348956","Сергей");
+        Lead lead5 = new Lead(UUID.randomUUID(),new Contact("","",new Address("","",""))
+                ,"hobbit",LeadStatus.NEW, "bilbobeggins@gmail.com","844585676","Михаил");
+        Lead lead6 = new Lead(UUID.randomUUID(),new Contact("","",new Address("","",""))
+                ,"yandex",LeadStatus.DONE, "fdsfdsg@gmail.com","878654826","Григорий");
+        leadService.addLead(lead1); // Положили туда лидов
+        leadService.addLead(lead2); // Положили туда лидов
+        leadService.addLead(lead3); // Положили туда лидов
+        leadService.addLead(lead4); // Положили туда лидов
+        leadService.addLead(lead5); // Положили туда лидов
+        leadService.addLead(lead6); // Положили туда лидов
+
     }
 
     public LeadService getService() {

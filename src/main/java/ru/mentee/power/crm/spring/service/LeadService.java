@@ -1,6 +1,7 @@
 package ru.mentee.power.crm.spring.service;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,8 +12,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.model.Lead;
@@ -45,6 +48,14 @@ public class LeadService {
         return lead;
     }
 
+    public Lead addLead(Lead lead) {
+        if (repository.findByEmail(lead.email()).isPresent()) {
+            throw new IllegalStateException("Лид с таким Email уже существует!");
+        }
+        repository.save(lead);
+        return lead;
+    }
+
     public List<Lead> findAll() {
         return repository.findAll();
     }
@@ -65,10 +76,11 @@ public class LeadService {
         Lead newLead = new Lead(
                 outDatedLead.id(),
                 contact,
-                outDatedLead.company(),
+                lead.company(),
                 lead.status(),
                 lead.email(),
-                lead.phone()
+                lead.phone(),
+                lead.name()
         );
 
         repository.delete(outDatedLead.id());
@@ -93,6 +105,31 @@ public class LeadService {
     @PostConstruct
     void init() {
         log.info("LeadService @PostConstruct init() called - Bean lifecycle phase");
+    }
+
+    public List<Lead> findLeads (String search, String status) {
+        Stream<Lead> leadStream = repository.findAll().stream();
+        if (search != null && !search.isEmpty()) {
+            leadStream = leadStream.filter(lead -> lead.email().toLowerCase().contains(search));
+        }
+        if (status != null && status.equals("По статусу")) {
+            leadStream = leadStream.filter(lead -> lead.status().equals(LeadStatus.valueOf(status)));
+        }
+        return leadStream.collect(Collectors.toList());
+    }
+
+    public void delete(UUID id) {
+        if(repository.findById(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        repository.delete(id);
+    }
+
+    public void clear() {
+        List<Lead> leads = repository.findAll();
+        for (Lead lead : leads) {
+            repository.delete(lead.id());
+        }
     }
 
 }

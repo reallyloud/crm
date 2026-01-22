@@ -43,4 +43,5 @@ public class InMemoryLeadRepository implements LeadRepository<Lead> {
     public int size() {
         return storageUUID.size();
     }
+
 }
