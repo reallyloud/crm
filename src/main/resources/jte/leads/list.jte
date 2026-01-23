@@ -57,6 +57,13 @@
                         >
                             Редактировать
                         </a>
+
+                        <a
+                                href="deals/convert/${lead.id().toString()}"
+                                class="bg-orange-500 text-white px-4 py-0.6 rounded hover:bg-green-600"
+                        >
+                            Создать deal
+                        </a>
                         <form method="post" action="/leads/${lead.id().toString()}/delete" class="inline"
                               onclick="return confirm('Удалить лида ${lead.email()}?')">
                             <button type="submit" class="bg-red-600 text-white px-3 py-0.4 rounded hover:bg-red-700">
