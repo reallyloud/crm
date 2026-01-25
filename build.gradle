@@ -28,16 +28,39 @@ ext {
 
 dependencies {
 
+
+    //Spring Boot Starters
+
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    implementation "gg.jte:jte-spring-boot-starter-3:${jteVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-webmvc-test:${springBootVersion}"
+
+    // PostgreSQL JDBC Driver (для dev и production)
+    runtimeOnly "org.postgresql:postgresql:42.7.9"
+
+
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-webmvc-test:${springBootVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.mockito:mockito-core:5.14.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
     testImplementation 'net.bytebuddy:byte-buddy:1.15.4'
     testImplementation 'net.bytebuddy:byte-buddy-agent:1.15.4'
+    // H2 Database (для тестов и разработки)
+    testRuntimeOnly "com.h2database:h2:2.3.232"
+    runtimeOnly "com.h2database:h2:2.3.232"
+
+    // H2 Console (требуется для Spring Boot 4.0+)
+    implementation "org.springframework.boot:spring-boot-h2console:${springBootVersion}"
 
     implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
     implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
@@ -46,9 +69,7 @@ dependencies {
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
     implementation "gg.jte:jte:${jteVersion}"
     implementation "gg.jte:jte-runtime:${jteVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-    implementation "gg.jte:jte-spring-boot-starter-3:${jteVersion}"
+
 
 }
 
@@ -59,6 +80,7 @@ application {
 
 tasks.named('bootRun') {
     mainClass = 'ru.mentee.power.crm.spring.StartSpringServer'
+    systemProperty 'spring.profiles.active', 'dev'
 }
 
 tasks.named('bootJar') {
