@@ -1,21 +1,47 @@
 package ru.mentee.power.crm.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.Objects;
+@Entity
+@Table(name = "leads")
+public record Lead(
 
-public record Lead(UUID id,
-                   Contact contact,
-                   String company,
-                   @NotNull(message = "Статус обязателен")LeadStatus status,
-                   @NotBlank(message = "Email обязателен") @Email(message = "Некорректный формат email") String email,
-                   @NotBlank(message = "Телефон обязателен") String phone,
-                   @NotBlank(message = "Имя обязательно") String name
+        @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
+        UUID id,
+
+        Contact contact,
+
+        @Column(name = "company")
+        String company,
+
+
+        @NotNull(message = "Статус обязателен")
+        @Column(name = "status")
+        LeadStatus status,
+
+
+        @NotBlank(message = "Email обязателен")
+        @Email(message = "Некорректный формат email")
+        @Column(name = "email")
+        String email,
+
+        @NotBlank(message = "Телефон обязателен")
+        String phone,
+
+        @NotBlank(message = "Имя обязательно")
+        String name,
+
+        @Column(name = "created_at", nullable = false, updatable = false)
+        LocalDateTime createdAt
 ) {
     public Lead {
     }
@@ -32,7 +58,7 @@ public record Lead(UUID id,
             throw new IllegalArgumentException();
         }
 
-        this(id, contact, company, status, "NoEmail", "NoPhone", "NoName");
+        this(id, contact, company, status, "NoEmail", "NoPhone", "NoName",LocalDateTime.now());
     }
 
     public Lead(UUID uuid, String email, String company, LeadStatus status) {
@@ -42,7 +68,7 @@ public record Lead(UUID id,
         Address address = new Address("", "", "");
         Contact contact = new Contact("", "", address);
 
-        this(uuid, contact, company, status, email, "NoPhone", "NoName");
+        this(uuid, contact, company, status, email, "NoPhone", "NoName",LocalDateTime.now());
     }
 
     @Override

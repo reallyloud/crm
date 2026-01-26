@@ -1,6 +1,7 @@
 package ru.mentee.power.crm.spring.service;
 
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +81,8 @@ public class LeadService {
                 lead.status(),
                 lead.email(),
                 lead.phone(),
-                lead.name()
+                lead.name(),
+                LocalDateTime.now()
         );
 
         repository.delete(outDatedLead.id());
