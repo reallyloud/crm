@@ -3,14 +3,16 @@ spring:
     url: jdbc:postgresql://localhost:5432/crm
     username: postgres
     password: 6881
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     database: POSTGRESQL
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
   sql:
     init:
