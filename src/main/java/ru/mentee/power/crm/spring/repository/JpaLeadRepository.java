@@ -1,22 +1,72 @@
 package ru.mentee.power.crm.spring.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.entity.Lead;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
 
-    @Query(value = "SELECT * FROM leads WHERE email = ?1",nativeQuery = true)
-    public Optional<Lead> findByEmailNative(String email);
+    //Derived Query Methods:
+    // findAll(Pageable) уже есть в JpaRepository, не нужно дублировать
 
-    @Query(value = "SELECT * FROM leads WHERE status = ?1" ,nativeQuery = true)
-    public List<Lead> findByStatusNative(LeadStatus status);
+    Page<Lead> findByStatus(LeadStatus status, Pageable pageable);
 
-    // для поиска по email
+    Page<Lead> findByCompany(String company, Pageable pageable);
+
+    Optional<Lead> findByEmail(String email);
+
+    List<Lead> findByStatus(LeadStatus status);
+
+    List<Lead> findByEmailContaining(String emailPart);
+
+    List<Lead> findByCompany(String company);
+
+    long countByStatus(LeadStatus status);
+
+    boolean existsByEmail(String email);
+
+    List<Lead> findByStatusAndCompany(LeadStatus status, String company);
+
+    List<Lead> findByStatusOrderByCreatedAtDesc(LeadStatus status);
+
+    //JPQL запросы:
+
+    @Query("SELECT l FROM Lead l WHERE l.status IN :statuses")
+    public List<Lead> findByStatusIn(@Param("statuses") List<LeadStatus> statuses);
+
+    @Query("SELECT l FROM Lead l WHERE l.createdAt > :date")
+    List<Lead> findCreatedAfter(@Param("date") LocalDateTime date);
+
+    @Query("SELECT l FROM Lead l WHERE l.company =:companyName")
+    List<Lead> findByCompanyName(@Param("companyName") String name);
+
+    //Возвращает количество ОБНОВЛЁННЫХ строк
+    @Modifying
+    @Query("UPDATE Lead l SET l.status = :newStatus WHERE l.status = :oldStatus")
+    int updateStatusBulk(
+            @Param("oldStatus") LeadStatus oldStatus,
+            @Param("newStatus") LeadStatus newStatus
+    );
+
+    //Возвращает количество УДАЛЁННЫХ строк
+    @Modifying
+    @Query("DELETE FROM Lead l WHERE l.status = :status")
+    int deleteByStatusBulk(@Param("status") LeadStatus status);
+
+
+
+    
+
+
 }
