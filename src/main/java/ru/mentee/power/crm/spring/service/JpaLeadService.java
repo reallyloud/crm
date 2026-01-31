@@ -1,6 +1,8 @@
 package ru.mentee.power.crm.spring.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JpaLeadService {
 
+    private static final Logger log = LoggerFactory.getLogger(JpaLeadService.class);
     private final JpaLeadRepository repository;
 
     /**
@@ -59,7 +62,7 @@ public class JpaLeadService {
     public int convertNewToContacted() {
         int updated = repository.updateStatusBulk(LeadStatus.NEW, LeadStatus.CONTACTED);
         // Логируем для observability
-        System.out.printf("Converted %d leads from NEW to CONTACTED%n", updated);
+        log.info("Converted {} leads from NEW to CONTACTED",updated);
         return updated;
     }
 
