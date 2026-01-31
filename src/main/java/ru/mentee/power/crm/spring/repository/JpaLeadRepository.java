@@ -17,9 +17,6 @@ import java.util.UUID;
 
 public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
 
-    //Derived Query Methods:
-    // findAll(Pageable) уже есть в JpaRepository, не нужно дублировать
-
     Page<Lead> findByStatus(LeadStatus status, Pageable pageable);
 
     Page<Lead> findByCompany(String company, Pageable pageable);
