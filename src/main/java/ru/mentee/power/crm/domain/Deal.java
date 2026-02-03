@@ -1,10 +1,17 @@
 package ru.mentee.power.crm.domain;
 
+import jakarta.persistence.Entity;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Data
+@RequiredArgsConstructor
 public class Deal {
     private final UUID id;
     private final UUID leadId;

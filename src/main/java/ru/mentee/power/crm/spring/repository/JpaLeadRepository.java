@@ -29,6 +29,7 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
 
     List<Lead> findByCompany(String company);
 
+
     long countByStatus(LeadStatus status);
 
     boolean existsByEmail(String email);
@@ -38,6 +39,8 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
     List<Lead> findByStatusOrderByCreatedAtDesc(LeadStatus status);
 
     //JPQL запросы:
+    @Query("SELECT l.id FROM Lead l")
+    List<UUID> findAllIds();
 
     @Query("SELECT l FROM Lead l WHERE l.status IN :statuses")
     public List<Lead> findByStatusIn(@Param("statuses") List<LeadStatus> statuses);

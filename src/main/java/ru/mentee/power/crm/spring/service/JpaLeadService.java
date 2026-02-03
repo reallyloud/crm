@@ -3,25 +3,33 @@ package ru.mentee.power.crm.spring.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mentee.power.crm.domain.DealStatus;
+import ru.mentee.power.crm.spring.entity.Deal;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class JpaLeadService {
 
     private static final Logger log = LoggerFactory.getLogger(JpaLeadService.class);
+
     private final JpaLeadRepository repository;
+    private final JpaLeadProcessor processor;
 
     /**
      * Поиск лида по email (derived method).
@@ -70,5 +78,42 @@ public class JpaLeadService {
     public int archiveOldLeads(LeadStatus status) {
     return repository.deleteByStatusBulk(status);
     }
+
+    // SELF INVOKE PROBLEM
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    private void processSingleLead(UUID id,int i) {
+        if (i == 1) {
+            throw new IllegalArgumentException();
+        }
+        if (repository.findById(id).isPresent()) {
+            Lead lead = repository.findById(id).get();
+            lead.setName("PROCESSED");
+            repository.save(lead);
+        }
+    }
+
+    // SELF INVOKE PROBLEM
+    public void processLeadsSelfInvoke(List<UUID> ids) {
+        int i = 0;
+        for (UUID id: ids) {
+            this.processSingleLead(id,i);
+            i++;
+        }
+    }
+
+    public void processLeads(List<UUID> ids) {
+        int i = 0;
+        for (UUID id: ids) {
+            processor.processSingleLead(id,i);
+            i++;
+        }
+
+    }
+
+
+
+
+
+
 
 }

@@ -40,6 +40,9 @@ public class Lead {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Version
+    private Long version;
+
     public Lead(String name,String email, String company, LeadStatus status) {
         this.name = name;
         this.email = email;

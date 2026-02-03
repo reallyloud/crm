@@ -50,7 +50,7 @@ class LeadControllerTest {
         when(leadService.findLeads("ivan",null)).thenReturn(leadList);
 
         mockMvc.perform(get("/leads")
-                .param("search","ivan"))
+                        .param("search","ivan"))
                 .andExpect(model().attribute("leads",leadList))
                 .andExpect(status().isOk());
 
@@ -111,7 +111,7 @@ class LeadControllerTest {
     @Test
     void shouldReturnFormWithFieldErrorName() throws Exception {
         mockMvc.perform(post("/leads")
-                .param("name", "").param("email", "test@test.com"))
+                        .param("name", "").param("email", "test@test.com"))
                 .andExpect(view().name("leads/createForm"))
                 .andExpect(model().attributeHasFieldErrors("lead", "name"));
     }
@@ -119,17 +119,17 @@ class LeadControllerTest {
     @Test
     void shouldReturnFormWithFieldErrorEmail() throws Exception {
         mockMvc.perform(post("/leads")
-                .param("email", "invalidemail"))
+                        .param("email", "invalidemail"))
                 .andExpect(model().attributeHasFieldErrorCode("lead", "email", "Email"));
     }
 
     @Test
     void allFieldsValid() throws Exception {
         mockMvc.perform(post("/leads")
-                .param("email", "example@gmial.com")
-                .param("status","NEW")
-                .param("phone","52364")
-                .param("name","name"))
+                        .param("email", "example@gmial.com")
+                        .param("status","NEW")
+                        .param("phone","52364")
+                        .param("name","name"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/leads"));
 

@@ -12,7 +12,7 @@ import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 import ru.mentee.power.crm.spring.service.JpaLeadService;
-import ru.mentee.power.crm.testHelpClasses.TestDataFactory;
+import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -37,11 +37,10 @@ class TransactionalTest {
     @BeforeEach
     void setUp() {
         repository.deleteAll();
-        Model<Lead> leadModel = TestDataFactory.generateRandomLead();
 
-        Lead lead1 = Instancio.of(leadModel).create();
-        Lead lead2 = Instancio.of(leadModel).create();
-        Lead lead3 = Instancio.of(leadModel).create();
+        Lead lead1 = DataGenerator.generateRandomLead();
+        Lead lead2 = DataGenerator.generateRandomLead();
+        Lead lead3 = DataGenerator.generateRandomLead();
 
         repository.save(lead1);
         repository.save(lead2);
