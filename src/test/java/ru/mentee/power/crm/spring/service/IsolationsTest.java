@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -28,6 +30,7 @@ class IsolationsTest {
 
     private final String masterTransaction = " {ОСНОВНАЯ ТРАНЗАКЦИЯ} ";
     private final String otherTransaction = " {ДРУГАЯ ТРАНЗАКЦИЯ} ";
+    private String transactionName;
 
     @Autowired
     private JpaLeadRepository repository;
@@ -92,36 +95,46 @@ class IsolationsTest {
     private String[] testIsolationLevel(Isolation isolation, UUID leadId) {
         TransactionTemplate tx1 = new TransactionTemplate(transactionManager);
         tx1.setIsolationLevel(isolation.value());
+
         String[] answer = new String[2];
 
         tx1.execute(status -> {
+
+
             Lead lead = repository.findById(leadId)
                     .orElseThrow(() -> new RuntimeException("Lead not found with id: " + leadId));
 
             String firstRead = lead.getName();
-            log.info(isolation.name() + masterTransaction + "- Первый SELECT: Имя лида = " + firstRead);
+
+            //Логируем
+            transactionName = tx1.getName();
+            log.info(transactionName + isolation.name() + masterTransaction + "- Первый SELECT: Имя лида = " + firstRead);
 
             // Делаем другую транзакцию с Propagation REQUIRES_NEW
             TransactionTemplate tx2 = new TransactionTemplate(transactionManager);
             tx2.setPropagationBehavior(Propagation.REQUIRES_NEW.value());
 
             tx2.execute(status1 -> {
+
                 Lead leadToUpdate = repository.findById(leadId)
                         .orElseThrow(() -> new RuntimeException("Lead not found"));
                 leadToUpdate.setName("Новое имя!!!");
                 repository.save(leadToUpdate);
                 repository.flush();
-                log.info(isolation.name() + otherTransaction + "имя лида изменено на 'Новое имя!!!'");
+
+                //Логируем
+                transactionName = tx2.getName();
+                log.info(transactionName + isolation.name() + otherTransaction + "имя лида изменено на 'Новое имя!!!'");
                 return null;
             });
 
-            // ВАЖНО: Очищаем кэш и перечитываем сущность
             entityManager.clear();
 
-            // Второе чтение - теперь из БД
             Lead leadAfterUpdate = repository.findById(leadId)
                     .orElseThrow(() -> new RuntimeException("Lead not found"));
             String secondRead = leadAfterUpdate.getName();
+
+            transactionName = tx1.getName();
             log.info(isolation.name() + masterTransaction + "- Второй SELECT: Имя лида = " + secondRead);
 
             answer[0] = firstRead;

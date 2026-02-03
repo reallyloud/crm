@@ -9,3 +9,12 @@ gg:
 spring:
   application:
     name: mentee-power-crm
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
