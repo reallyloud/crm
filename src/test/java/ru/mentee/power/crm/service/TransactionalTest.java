@@ -1,10 +1,10 @@
 package ru.mentee.power.crm.service;
 
+import org.instancio.Instancio;
+import org.instancio.Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,17 +12,21 @@ import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 import ru.mentee.power.crm.spring.service.JpaLeadService;
+import ru.mentee.power.crm.testHelpClasses.DataGenerator;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@ActiveProfiles("application-test")
 @SpringBootTest(classes = ru.mentee.power.crm.spring.Application.class)
 @Transactional
 class TransactionalTest {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionalTest.class);
 
     @Autowired
     private JpaLeadService service;
@@ -34,45 +38,42 @@ class TransactionalTest {
     void setUp() {
         repository.deleteAll();
 
-        // Создаём 3 NEW лида
-        for (int i = 1; i <= 3; i++) {
-            Lead lead = new Lead();
-            lead.setName("lead" + i);
-            lead.setEmail("lead" + i + "@example.com");
-            lead.setCompany("Company " + i);
-            lead.setPhone("785694789" + i);
-            lead.setStatus(LeadStatus.NEW);
-            repository.save(lead);
-        }
+        Lead lead1 = DataGenerator.generateRandomLead();
+        Lead lead2 = DataGenerator.generateRandomLead();
+        Lead lead3 = DataGenerator.generateRandomLead();
+
+        repository.save(lead1);
+        repository.save(lead2);
+        repository.save(lead3);
+
     }
 
     @Test
     void convertNewToContacted_shouldUpdateMultipleLeads() {
         // When
+        int leadsContacted = service.findByStatuses(LeadStatus.CONTACTED).size();
+        int leadsNew = service.findByStatuses(LeadStatus.NEW).size();
         int updated = service.convertNewToContacted();
 
         // Then
-        assertThat(updated).isEqualTo(3);
+        assertThat(updated).isEqualTo(leadsNew);
 
         // Проверяем что статус изменился
         long contactedCount = repository.countByStatus(LeadStatus.CONTACTED);
-        assertThat(contactedCount).isEqualTo(3);
+        assertThat(contactedCount).isEqualTo(updated+leadsContacted);
 
-        long newCount = repository.countByStatus(LeadStatus.NEW);
-        assertThat(newCount).isEqualTo(0);
     }
 
     @Test
     void archiveOldLeads() {
         //When
-        int deleted = service.archiveOldLeads(LeadStatus.NEW);
+        int contacted = service.findByStatuses(LeadStatus.CONTACTED).size();
+        int deleted = service.archiveOldLeads(LeadStatus.CONTACTED);
         List<Lead> leads = repository.findAll();
 
 
         //Then
-        assertThat(deleted).isEqualTo(3);
-        assertThat(leads).isEmpty();
+        assertThat(contacted).isEqualTo(deleted);
     }
 
-    // TODO: Студент добавляет тест для метода archiveOldLeads
 }

@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS leads (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE,
     created_by UUID,
-    assigned_to UUID
+    assigned_to UUID,
+    version BIGINT NOT NULL DEFAULT 0
 );
 
 -- Индекс для быстрого поиска по email
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS deals (
     title VARCHAR(255) NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
     currency VARCHAR(3) DEFAULT 'USD',
-    stage VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
     probability INTEGER CHECK (probability BETWEEN 0 AND 100),
     expected_close_date DATE,
     actual_close_date DATE,
@@ -54,4 +55,4 @@ CREATE TABLE IF NOT EXISTS deals (
 
 -- Индексы для deals
 CREATE INDEX IF NOT EXISTS idx_deals_lead_id ON deals(lead_id);
-CREATE INDEX IF NOT EXISTS idx_deals_stage ON deals(stage);
+CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status);

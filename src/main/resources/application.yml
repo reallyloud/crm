@@ -6,17 +6,15 @@ gg:
     templateLocation: src/main/resources/jte
     developmentMode: true
 
-
 spring:
   application:
-    name: m-crm
+    name: mentee-power-crm
 
-  messages:
-    basename: messages
-    encoding: UTF-8
-
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,metrics
+  endpoint:
+    health:
+      show-details: when-authorized

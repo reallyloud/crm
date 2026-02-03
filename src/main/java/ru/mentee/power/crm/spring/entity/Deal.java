@@ -1,0 +1,67 @@
+package ru.mentee.power.crm.spring.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.mentee.power.crm.domain.DealStatus;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+@Entity
+@Table(name = "deals")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Deal {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private UUID leadId;
+
+    @NotNull
+    @Column(nullable = false)
+    private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    private DealStatus status;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    public Deal(String title, UUID leadId, BigDecimal amount, DealStatus status) {
+        this.title = title;
+        this.leadId = leadId;
+        this.amount = amount;
+        this.status = status;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Deal deal)) return false;
+        return Objects.equals(id, deal.id) && Objects.equals(title, deal.title) && Objects.equals(leadId, deal.leadId) && Objects.equals(amount, deal.amount) && status == deal.status && Objects.equals(createdAt, deal.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, leadId, amount, status, createdAt);
+    }
+}

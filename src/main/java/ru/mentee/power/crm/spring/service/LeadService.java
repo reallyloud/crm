@@ -69,9 +69,9 @@ public class LeadService {
         Lead outDatedLead = repository.findById(uuid).get();
         Address address = new Address("","","");
         Contact contact = new Contact(
-                    lead.email(),
-                    lead.phone(),
-                    address
+                lead.email(),
+                lead.phone(),
+                address
         );
 
         Lead newLead = new Lead(
