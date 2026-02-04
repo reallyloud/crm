@@ -2,9 +2,7 @@ package ru.mentee.power.crm.spring.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.mentee.power.crm.domain.DealStatus;
 
 import java.math.BigDecimal;
@@ -14,7 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "deals")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Deal {
@@ -51,6 +50,14 @@ public class Deal {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
+    }
+
+    public void transitionTo(DealStatus newStatus) {
+        if (!status.canTransitionTo(newStatus)) {
+            throw new IllegalArgumentException
+                    ("Невозможно перейти от статуса Deal \"" + status + "\" к статусу \"" + newStatus + "\"");
+        }
+        this.status = newStatus;
     }
 
 

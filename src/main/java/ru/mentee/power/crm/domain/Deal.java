@@ -2,6 +2,7 @@ package ru.mentee.power.crm.domain;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -9,9 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
-@Data
 @RequiredArgsConstructor
+@Getter
 public class Deal {
     private final UUID id;
     private final UUID leadId;
@@ -45,25 +45,6 @@ public class Deal {
     }
 
     // Getters (БЕЗ setter для status!)
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getLeadId() {
-        return leadId;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public DealStatus getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 
     @Override
     public boolean equals(Object o) {

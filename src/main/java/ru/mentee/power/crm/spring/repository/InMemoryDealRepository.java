@@ -4,7 +4,10 @@ import org.springframework.stereotype.Repository;
 import ru.mentee.power.crm.domain.Deal;
 import ru.mentee.power.crm.domain.DealStatus;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -13,7 +16,7 @@ public class InMemoryDealRepository implements DealRepository {
 
     @Override
     public void save(Deal deal) {
-        storage.put(deal.getId(),deal);
+        storage.put(deal.getId(), deal);
     }
 
     @Override
