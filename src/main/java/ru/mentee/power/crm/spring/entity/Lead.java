@@ -1,10 +1,7 @@
 package ru.mentee.power.crm.spring.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 import ru.mentee.power.crm.model.LeadStatus;
 
 import java.time.LocalDateTime;
@@ -13,7 +10,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "leads")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Lead {

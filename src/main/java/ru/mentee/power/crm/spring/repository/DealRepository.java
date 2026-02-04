@@ -9,8 +9,12 @@ import java.util.UUID;
 
 public interface DealRepository {
     void save(Deal deal);
+
     Optional<Deal> findById(UUID id);
+
     List<Deal> findAll();
+
     List<Deal> findByStatus(DealStatus status);
+
     void deleteById(UUID id);
 }

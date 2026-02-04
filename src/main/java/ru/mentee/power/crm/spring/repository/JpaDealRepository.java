@@ -12,6 +12,7 @@ import java.util.UUID;
 public interface JpaDealRepository extends JpaRepository<Deal, UUID> {
 
     Optional<Deal> findByLeadId(UUID leadId);
+
     List<Deal> findByStatus(DealStatus status);
 
 }

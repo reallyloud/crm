@@ -10,28 +10,22 @@ import ru.mentee.power.crm.domain.Contact;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.Objects;
-@Entity
-@Table(name = "leads")
+
 public record Lead(
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.UUID)
         UUID id,
 
         Contact contact,
 
-        @Column(name = "company")
         String company,
 
 
         @NotNull(message = "Статус обязателен")
-        @Column(name = "status")
         LeadStatus status,
 
 
         @NotBlank(message = "Email обязателен")
         @Email(message = "Некорректный формат email")
-        @Column(name = "email")
         String email,
 
         @NotBlank(message = "Телефон обязателен")
@@ -40,7 +34,6 @@ public record Lead(
         @NotBlank(message = "Имя обязательно")
         String name,
 
-        @Column(name = "created_at", nullable = false, updatable = false)
         LocalDateTime createdAt
 ) {
     public Lead {

@@ -1,14 +1,9 @@
 package ru.mentee.power.crm.spring.repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.mentee.power.crm.model.Lead;
+
+import java.util.*;
 
 @Repository
 public class InMemoryLeadRepository implements LeadRepository<Lead> {
