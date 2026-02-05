@@ -20,6 +20,10 @@ public class Lead {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Version
+    @Setter(AccessLevel.NONE)
+    private Long version;
+
     @Column(nullable = false)
     private String name;
 
@@ -37,9 +41,6 @@ public class Lead {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @Version
-    private Long version;
 
     public Lead(String name,String email, String company, LeadStatus status) {
         this.name = name;

@@ -1,8 +1,10 @@
 package ru.mentee.power.crm.spring.repository;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -57,6 +59,15 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
             @Param("oldStatus") LeadStatus oldStatus,
             @Param("newStatus") LeadStatus newStatus
     );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT l FROM Lead l WHERE l.id = :id")
+    Optional<Lead> findByIdForUpdate(@Param("id") UUID id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT l FROM Lead l WHERE l.email = :email")
+    Optional<Lead> findByEmailForUpdate(@Param("email") String email);
+
 
     //Возвращает количество УДАЛЁННЫХ строк
     @Modifying
