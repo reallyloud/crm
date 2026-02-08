@@ -35,7 +35,7 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
 
     boolean existsByEmail(String email);
 
-    List<Lead> findByStatusAndCompany(LeadStatus status, String company);
+    List<Lead> findByStatusAndCompanyName(LeadStatus status, String companyName);
 
     List<Lead> findByStatusOrderByCreatedAtDesc(LeadStatus status);
 
