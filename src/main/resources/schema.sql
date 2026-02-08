@@ -1,10 +1,19 @@
+-- Таблица Companies (компании)
+CREATE TABLE IF NOT EXISTS companies (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    industry VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    assigned_to UUID
+);
+
 -- Таблица Leads (потенциальные клиенты)
 CREATE TABLE IF NOT EXISTS leads (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(50),
-    company VARCHAR(255),
+    company_id UUID REFERENCES companies(id),
     status VARCHAR(50) NOT NULL,
     source VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,

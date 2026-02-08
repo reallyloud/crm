@@ -1,5 +1,10 @@
 package ru.mentee.power.crm.spring.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +13,11 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.mentee.power.crm.spring.entity.Lead;
+
 import ru.mentee.power.crm.model.LeadStatus;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import ru.mentee.power.crm.spring.entity.Company;
+import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 
 
 @DataJpaTest
@@ -35,7 +37,7 @@ class JpaLeadRepositoryTest {
         lead1 = new Lead();
         lead1.setName("john");
         lead1.setEmail("john@example.com");
-        lead1.setCompany("ACME Corp");
+        lead1.setCompany(DataGenerator.generateRandomCompany());
         lead1.setStatus(LeadStatus.NEW);
         lead1.setCreatedAt(LocalDateTime.now().minusDays(5));
         lead1.setPhone("869548793");
@@ -44,7 +46,7 @@ class JpaLeadRepositoryTest {
         lead2 = new Lead();
         lead2.setName("jane");
         lead2.setEmail("jane@example.com");
-        lead2.setCompany("Tech Inc");
+        lead2.setCompany(DataGenerator.generateRandomCompany());
         lead2.setStatus(LeadStatus.CONTACTED);
         lead2.setPhone("8695493654");
         lead2.setCreatedAt(LocalDateTime.now().minusDays(2));
@@ -58,7 +60,7 @@ class JpaLeadRepositoryTest {
         Lead lead = new Lead();
         lead.setName("Олег");
         lead.setEmail("test@example.com");
-        lead.setCompany("ACME");
+        lead.setCompany(DataGenerator.generateRandomCompany());
         lead.setStatus(LeadStatus.NEW);
         lead.setPhone("+1234567890");
 
@@ -74,10 +76,11 @@ class JpaLeadRepositoryTest {
     @Test
     void shouldFindByEmailNative_whenLeadExists() {
         // Given
+        Company company = DataGenerator.generateRandomCompany();
         Lead lead = new Lead();
         lead.setName("Олег");
         lead.setEmail("native@test.com");
-        lead.setCompany("TechCorp");
+        lead.setCompany(company);
         lead.setStatus(LeadStatus.NEW);
         lead.setPhone("+1234567890");
         repository.save(lead);
@@ -87,7 +90,7 @@ class JpaLeadRepositoryTest {
 
         // Then
         assertThat(found).isPresent();
-        assertThat(found.get().getCompany()).isEqualTo("TechCorp");
+        assertThat(found.get().getCompany()).isEqualTo(company);
     }
 
     @Test
@@ -105,20 +108,20 @@ class JpaLeadRepositoryTest {
         //Given
         lead1.setName("Олег");
         lead1.setEmail("native1@test.com");
-        lead1.setCompany("TechCorp1");
+        lead1.setCompany(DataGenerator.generateRandomCompany());
         lead1.setStatus(LeadStatus.NEW);
         lead1.setPhone("+1234567890");
 
         lead2.setName("Максим");
         lead2.setEmail("native2@test.com");
-        lead2.setCompany("TechCorp2");
+        lead2.setCompany(DataGenerator.generateRandomCompany());
         lead2.setStatus(LeadStatus.NEW);
         lead2.setPhone("+1234567891");
 
         Lead lead3 = new Lead();
         lead3.setName("Гена");
         lead3.setEmail("native3@test.com");
-        lead3.setCompany("TechCorp3");
+        lead3.setCompany(DataGenerator.generateRandomCompany());
         lead3.setStatus(LeadStatus.NEW);
         lead3.setPhone("+1234567892");
 
@@ -139,7 +142,7 @@ class JpaLeadRepositoryTest {
 
         // Then
         assertThat(found).isPresent();
-        assertThat(found.get().getCompany()).isEqualTo("ACME Corp");
+        assertThat(found.get().getPhone()).isEqualTo("869548793");
     }
 
     @Test
@@ -200,8 +203,13 @@ class JpaLeadRepositoryTest {
 
     @Test
     void findByStatusAndCompany() {
+        Lead lead = DataGenerator.generateRandomLead();
+        lead.setStatus(LeadStatus.NEW);
+        String companyName = lead.getCompany().getName();
+        repository.save(lead);
+
         //When
-        List<Lead> result = repository.findByStatusAndCompany(LeadStatus.NEW,"ACME Corp");
+        List<Lead> result = repository.findByStatusAndCompanyName(LeadStatus.NEW,companyName);
 
         //Then
         assertThat(result).hasSize(1);

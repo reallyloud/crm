@@ -1,12 +1,29 @@
 package ru.mentee.power.crm.spring.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import ru.mentee.power.crm.model.LeadStatus;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ru.mentee.power.crm.model.LeadStatus;
 
 @Entity
 @Table(name = "leads")
@@ -33,8 +50,9 @@ public class Lead {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private String company;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Enumerated(EnumType.STRING)
     private LeadStatus status;
@@ -42,7 +60,7 @@ public class Lead {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public Lead(String name,String email, String company, LeadStatus status) {
+    public Lead(String name,String email, Company company, LeadStatus status) {
         this.name = name;
         this.email = email;
         this.company = company;

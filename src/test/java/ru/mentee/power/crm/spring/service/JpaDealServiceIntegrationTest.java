@@ -1,5 +1,11 @@
 package ru.mentee.power.crm.spring.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,18 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import ru.mentee.power.crm.spring.entity.Deal;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.spring.repository.JpaDealRepository;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
-import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 import ru.mentee.power.crm.spring.utility.PropagationInvoker;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.*;
+import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ru.mentee.power.crm.spring.Application.class)

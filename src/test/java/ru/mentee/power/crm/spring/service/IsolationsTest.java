@@ -1,6 +1,8 @@
 package ru.mentee.power.crm.spring.service;
 
-import jakarta.persistence.EntityManager;
+import java.util.UUID;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -8,21 +10,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import jakarta.persistence.EntityManager;
 import ru.mentee.power.crm.spring.Application;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 import ru.mentee.power.crm.testHelpClasses.DataGenerator;
-
-import java.util.UUID;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
