@@ -23,6 +23,8 @@ ext {
     tomcatVersion = '11.0.1'
     validationApiVersion = '3.0.2'
     hibernateValidatorVersion = '8.0.2.Final'
+    liquibaseVersion = '4.25.0'
+    postgresqlVersion = '42.7.9'
 
 }
 
@@ -40,7 +42,7 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-webmvc-test:${springBootVersion}"
 
     // PostgreSQL JDBC Driver (для dev и production)
-    runtimeOnly "org.postgresql:postgresql:42.7.9"
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
 
 
 
@@ -63,6 +65,7 @@ dependencies {
 
     // H2 Console (требуется для Spring Boot 4.0+)
     implementation "org.springframework.boot:spring-boot-h2console:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
 
     implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
     implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
@@ -71,6 +74,16 @@ dependencies {
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
     implementation "gg.jte:jte:${jteVersion}"
     implementation "gg.jte:jte-runtime:${jteVersion}"
+
+    // Database (Sprint 7)
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+
+    // Liquibase for DB migrations (Sprint 7, BCORE-32)
+    implementation "org.springframework.boot:spring-boot-starter-liquibase:${springBootVersion}"
+
+    // Spring Data JPA (Sprint 7, BCORE-30)
+
+
 
 
 }

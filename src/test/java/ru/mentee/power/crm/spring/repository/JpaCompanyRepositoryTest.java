@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mentee.power.crm.spring.entity.Company;
 import ru.mentee.power.crm.spring.entity.Lead;
@@ -13,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 class CompanyRepositoryTest {
 

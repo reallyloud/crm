@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.servlet.LeadListServlet;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.*;
  * Интеграционный тест сравнения Servlet и Spring Boot стеков.
  * Запускает оба сервера, выполняет HTTP запросы, сравнивает результаты.
  */
+@ActiveProfiles("test")
 class StackComparisonTest {
 
     private static final int SERVLET_PORT = 8080;
@@ -47,7 +49,7 @@ class StackComparisonTest {
         Application springServer = new Application();
 
         servletServer.start();
-        springServer.start();
+        springServer.start("--spring.profiles.active=test");
         // Given: HTTP запросы к обоим стекам и открываем серверы
 
 
