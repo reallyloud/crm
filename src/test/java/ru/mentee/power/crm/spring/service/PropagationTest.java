@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
@@ -19,6 +20,7 @@ import ru.mentee.power.crm.spring.utility.PropagationInvoker;
 import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 
 @SpringBootTest(classes = ru.mentee.power.crm.spring.Application.class)
+@ActiveProfiles("test")
 class PropagationTest {
 
     Logger log = LoggerFactory.getLogger(PropagationTest.class);

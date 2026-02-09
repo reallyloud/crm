@@ -3,10 +3,16 @@ package ru.mentee.power.crm.testHelpClasses;
 import org.instancio.Instancio;
 import static org.instancio.Select.field;
 
+import org.instancio.Select;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.entity.Company;
 import ru.mentee.power.crm.spring.entity.Deal;
 import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.spring.entity.Product;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Random;
 
 
 public class DataGenerator {
@@ -40,5 +46,21 @@ public class DataGenerator {
                 .generate(field(Company::getName),generate -> generate.string().minLength(2).maxLength(40))
                 .generate(field(Company::getIndustry), generate -> generate.string().minLength(2).maxLength(40))
                 .create();
+    }
+
+    public static Product generateRandomProduct() {
+        return Instancio.of(Product.class)
+                .ignore(field(Product::getId))
+                .generate(field(Product::getSku),generate -> generate.string().minLength(2).maxLength(40))
+                .generate(field(Product::getName),generate -> generate.string().minLength(2).maxLength(40))
+                .set(field(Product::getPrice),generateRandomBigDecimal())
+                .set(field(Product::getActive),true)
+                .create();
+    }
+
+    public static BigDecimal generateRandomBigDecimal() {
+        Random random = new Random();
+        return BigDecimal.valueOf(random.nextInt(1,999999))
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }

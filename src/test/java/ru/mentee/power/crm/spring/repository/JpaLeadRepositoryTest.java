@@ -22,7 +22,7 @@ import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("application-test")
+@ActiveProfiles("test")
 class JpaLeadRepositoryTest {
 
     @Autowired

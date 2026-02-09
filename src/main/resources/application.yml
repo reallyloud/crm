@@ -7,9 +7,19 @@ gg:
     developmentMode: true
 
 spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+    drop-first: false
 
   application:
     name: mentee-power-crm
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
 
 management:
   endpoints:

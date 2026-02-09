@@ -25,7 +25,7 @@ public class Deal {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @JoinColumn(name = "lead_id")
     private UUID leadId;
 
     @NotNull
