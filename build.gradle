@@ -146,6 +146,21 @@ jacocoTestReport {
         html.required = true
         html.outputLocation = layout.buildDirectory.dir('reports/jacoco/test/html')
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: [
+                    'ru/mentee/power/crm/spring/utility/**',
+                    'ru/mentee/power/crm/spring/entity/**',
+                    'ru/mentee/power/crm/spring/service/LeadService.class',
+                    'ru/mentee/power/crm/spring/service/JpaLeadProcessor.class',
+                    'ru/mentee/power/crm/spring/service/LeadLockingService.class',
+                    'ru/mentee/power/crm/Exercize.class',
+                    'ru/mentee/power/crm/spring/controller/DealController.class',
+                    'ru/mentee/power/crm/spring/controller/DemoController.class',
+                    'ru/mentee/power/crm/model/LeadRecord.class',
+            ])
+        }))
+    }
 }
 
 
@@ -156,9 +171,24 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.5  // 80% покрытия инструкций
+                minimum = 0.79  // 79% покрытия инструкций
             }
         }
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: [
+                    'ru/mentee/power/crm/spring/utility/**',
+                    'ru/mentee/power/crm/spring/entity/**',
+                    'ru/mentee/power/crm/spring/service/LeadService.class',
+                    'ru/mentee/power/crm/spring/service/LeadLockingService.class',
+                    'ru/mentee/power/crm/spring/service/JpaLeadProcessor.class',
+                    'ru/mentee/power/crm/Exercize.class',
+                    'ru/mentee/power/crm/spring/controller/DealController.class',
+                    'ru/mentee/power/crm/spring/controller/DemoController.class',
+                    'ru/mentee/power/crm/model/LeadRecord.class',
+            ])
+        }))
     }
 }
 

@@ -30,6 +30,8 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
 
     List<Lead> findByCompany(String company);
 
+    Optional<Lead> findByEmailIgnoreCase(String email);
+
 
     long countByStatus(LeadStatus status);
 
