@@ -58,7 +58,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
     testImplementation 'net.bytebuddy:byte-buddy:1.15.4'
     testImplementation 'net.bytebuddy:byte-buddy-agent:1.15.4'
-    testImplementation 'org.instancio:instancio-core:5.5.1'
+    implementation 'org.instancio:instancio-core:5.5.1'
     // H2 Database (для тестов и разработки)
     testRuntimeOnly "com.h2database:h2:2.3.232"
     runtimeOnly "com.h2database:h2:2.3.232"

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -31,6 +33,9 @@ public class Product {
 
     @Column(nullable = false)
     private Boolean active = true;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    List<DealProduct> dealProducts = new ArrayList<>();
 
     // Примечание: @Data создаст getters/setters/toString автоматически
     // @EqualsAndHashCode(of = "sku") использует SKU для сравнения объектов

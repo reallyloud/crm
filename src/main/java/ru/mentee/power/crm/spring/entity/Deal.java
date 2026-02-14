@@ -7,6 +7,8 @@ import ru.mentee.power.crm.domain.DealStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,6 +39,19 @@ public class Deal {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<DealProduct> dealProducts = new ArrayList<>();
+
+    public void addDealProduct(DealProduct dealProduct) {
+        dealProduct.setDeal(this);
+        dealProducts.add(dealProduct);
+    }
+
+    public void removeDealProduct(DealProduct dealProduct) {
+        dealProduct.setDeal(null);
+        dealProducts.remove(dealProduct);
+    }
 
     public Deal(String title, UUID leadId, BigDecimal amount, DealStatus status) {
         this.title = title;
