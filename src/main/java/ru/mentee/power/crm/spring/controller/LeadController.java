@@ -1,7 +1,9 @@
 package ru.mentee.power.crm.spring.controller;
 
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,12 +14,18 @@ import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.entity.Deal;
+import ru.mentee.power.crm.spring.entity.DealProduct;
 import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
+import ru.mentee.power.crm.spring.repository.JpaDealRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static ru.mentee.power.crm.spring.utility.DataGeneratorDev.*;
+import static ru.mentee.power.crm.spring.utility.DataGeneratorDev.generateRandomDealProduct;
 
 @Controller
 @RequiredArgsConstructor
@@ -111,6 +119,8 @@ public class LeadController {
         leadService.addLead(lead6); // Положили туда лидов
 
     }
+
+
 
     public LeadService getService() {
         return this.leadService;

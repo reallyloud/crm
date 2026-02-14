@@ -68,6 +68,7 @@ class JpaProductRepositoryTest {
         Product product1 = DataGenerator.generateRandomProduct();
         Product product2 = DataGenerator.generateRandomProduct();
         Product product3 = DataGenerator.generateRandomProduct();
+
         product3.setActive(false);
         productRepository.save(product1);
         productRepository.save(product2);
@@ -97,9 +98,4 @@ class JpaProductRepositoryTest {
 
     }
 
-
-    // TODO: реализуйте тест для unique constraint на SKU
-    // Given продукт с SKU "TEST-001" сохранён
-    // When пытаемся сохранить второй продукт с тем же SKU
-    // Then выбрасывается DataIntegrityViolationException
 }

@@ -1,4 +1,4 @@
-package ru.mentee.power.crm.testHelpClasses;
+package ru.mentee.power.crm.spring.utility;
 
 import org.instancio.Instancio;
 import static org.instancio.Select.field;
@@ -13,7 +13,7 @@ import java.math.RoundingMode;
 import java.util.Random;
 
 
-public class DataGenerator {
+public class DataGeneratorDev {
 
     public static Lead generateRandomLead (){
         Lead lead = Instancio.of(Lead.class)
