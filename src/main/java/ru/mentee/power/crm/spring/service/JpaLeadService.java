@@ -21,6 +21,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.spring.entity.Company;
 
 @Service
 @RequiredArgsConstructor
@@ -110,8 +116,65 @@ public class JpaLeadService {
 
     }
 
+    // ========== CRUD methods for JpaLeadController ==========
 
+    public List<Lead> findAll() {
+        return repository.findAll();
+    }
 
+    public Optional<Lead> findById(UUID id) {
+        return repository.findById(id);
+    }
+
+    @Transactional
+    public Lead save(Lead lead) {
+        return repository.save(lead);
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead not found");
+        }
+        repository.deleteById(id);
+    }
+
+    @Transactional
+    public Lead update(UUID id, String name, String email, String phone, String companyName, LeadStatus status) {
+        Lead lead = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead not found"));
+        lead.setName(name);
+        lead.setEmail(email);
+        lead.setPhone(phone);
+        lead.setStatus(status);
+        if (lead.getCompany() != null) {
+            lead.getCompany().setName(companyName);
+        } else {
+            Company company = new Company();
+            company.setName(companyName);
+            lead.setCompany(company);
+        }
+        return repository.save(lead);
+    }
+
+    public List<Lead> findLeads(String search, String status) {
+        List<Lead> leads = repository.findAll();
+        Stream<Lead> stream = leads.stream();
+        if (search != null && !search.isEmpty()) {
+            String lowerSearch = search.toLowerCase();
+            stream = stream.filter(l ->
+                    l.getEmail().toLowerCase().contains(lowerSearch)
+                    || l.getName().toLowerCase().contains(lowerSearch));
+        }
+        if (status != null && !status.isEmpty()) {
+            try {
+                LeadStatus leadStatus = LeadStatus.valueOf(status);
+                stream = stream.filter(l -> l.getStatus() == leadStatus);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+        return stream.collect(Collectors.toList());
+    }
 
 
 

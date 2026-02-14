@@ -15,7 +15,11 @@ import ru.mentee.power.crm.spring.repository.JpaDealRepository;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +46,31 @@ public class JpaDealService {
                 DealStatus.NEW
         );
 
-    dealRepository.save(deal);
-    return deal;
+        dealRepository.save(deal);
+        return deal;
+    }
+
+    // ========== CRUD methods for JpaDealController ==========
+
+    public List<Deal> getAllDeals() {
+        return dealRepository.findAll();
+    }
+
+    public Optional<Deal> findById(UUID id) {
+        return dealRepository.findById(id);
+    }
+
+    public Map<DealStatus, List<Deal>> getDealsByStatusForKanban() {
+        return dealRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Deal::getStatus));
+    }
+
+    @Transactional
+    public Deal transitionDealStatus(UUID dealId, DealStatus newStatus) {
+        Deal deal = dealRepository.findById(dealId)
+                .orElseThrow(() -> new IllegalArgumentException("Deal not found: " + dealId));
+        deal.transitionTo(newStatus);
+        return dealRepository.save(deal);
     }
 
 }
