@@ -118,10 +118,12 @@ public class JpaLeadService {
 
     }
 
-    // ========== CRUD methods for JpaLeadController ==========
-
     public List<Lead> findAll() {
-        return repository.findAll();
+        List<Lead> leads = repository.findAll();
+        if (leads.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Leads not found.");
+        }
+        return leads;
     }
 
     public Optional<Lead> findById(UUID id) {
