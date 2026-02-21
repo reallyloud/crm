@@ -196,7 +196,4 @@ class LeadLockingServiceTest {
         executor.shutdown();
     }
 
-    // TODO: Создайте тест для deadlock ситуации
-    // - Два потока блокируют Lead'ы в разном порядке
-    // - Один из потоков должен получить CannotAcquireLockException
 }
