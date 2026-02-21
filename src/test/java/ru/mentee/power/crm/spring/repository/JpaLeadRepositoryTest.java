@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,13 @@ class JpaLeadRepositoryTest {
 
     @Autowired
     private JpaLeadRepository repository;
+
+    @Autowired
+    private JpaCompanyRepository companyRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
 
     private Lead lead1;
     private Lead lead2;
@@ -215,4 +224,29 @@ class JpaLeadRepositoryTest {
         assertThat(result).hasSize(1);
     }
 
+    @Test
+    void changePhoneByCompany() {
+        //Given
+        Lead lead1 = DataGenerator.generateRandomLead();
+        Lead lead2 = DataGenerator.generateRandomLead();
+        Lead lead3 = DataGenerator.generateRandomLead();
+        Lead lead4 = DataGenerator.generateRandomLead();
+        Lead lead5 = DataGenerator.generateRandomLead();
+        Company company = DataGenerator.generateRandomCompany();
+        lead1.setCompany(company);
+        lead2.setCompany(company);
+        lead3.setCompany(company);
+
+        companyRepository.save(company);
+        repository.saveAll(List.of(lead1,lead2,lead3,lead4,lead5));
+        int updated = repository.updatePhoneBulk(company.getId(),"86594368");
+        assertThat(updated).isEqualTo(3);
+        entityManager.flush();
+        entityManager.clear();
+
+        List<Lead> updatedLeads = repository.findByCompany(company);
+        for (Lead lead: updatedLeads) {
+            assertThat(lead.getPhone()).isEqualTo("86594368");
+        }
+    }
 }
