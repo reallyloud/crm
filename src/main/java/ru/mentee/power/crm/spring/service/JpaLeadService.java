@@ -15,6 +15,7 @@ import ru.mentee.power.crm.domain.DealStatus;
 import ru.mentee.power.crm.spring.entity.Deal;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.repository.JpaCompanyRepository;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ public class JpaLeadService {
 
     private final JpaLeadRepository repository;
     private final JpaLeadProcessor processor;
+    private final JpaCompanyRepository companyRepository;
 
     /**
      * Поиск лида по email (derived method).
@@ -174,6 +176,11 @@ public class JpaLeadService {
             }
         }
         return stream.collect(Collectors.toList());
+    }
+
+    @Transactional
+    public int changePhoneByCompany (UUID id, String phone) {
+        return repository.updatePhoneBulk(id,phone);
     }
 
 

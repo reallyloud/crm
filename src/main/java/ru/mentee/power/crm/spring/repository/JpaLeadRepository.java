@@ -3,12 +3,10 @@ package ru.mentee.power.crm.spring.repository;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.entity.Company;
 import ru.mentee.power.crm.spring.entity.Lead;
 
 import java.time.LocalDateTime;
@@ -28,10 +26,10 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
 
     List<Lead> findByEmailContaining(String emailPart);
 
-    List<Lead> findByCompany(String company);
+    @EntityGraph(attributePaths = ("company"))
+    List<Lead> findByCompany(Company company);
 
     Optional<Lead> findByEmailIgnoreCase(String email);
-
 
     long countByStatus(LeadStatus status);
 
@@ -60,6 +58,13 @@ public interface JpaLeadRepository extends JpaRepository<Lead, UUID> {
     int updateStatusBulk(
             @Param("oldStatus") LeadStatus oldStatus,
             @Param("newStatus") LeadStatus newStatus
+    );
+
+    @Modifying
+    @Query("UPDATE Lead l SET l.phone = :newPhone WHERE l.company.id = :companyId")
+    int updatePhoneBulk(
+            @Param("companyId") UUID companyId,
+            @Param("newPhone") String phone
     );
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
