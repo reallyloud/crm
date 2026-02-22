@@ -1,37 +1,36 @@
 package ru.mentee.power.crm.spring.service;
 
-import ru.mentee.power.crm.model.Lead;
-import ru.mentee.power.crm.spring.service.LeadService;
-import ru.mentee.power.crm.spring.repository.LeadRepository;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.context.ApplicationContext;
-import static org.assertj.core.api.Assertions.*;
+import org.springframework.test.context.ActiveProfiles;
+import ru.mentee.power.crm.model.Lead;
+import ru.mentee.power.crm.spring.repository.LeadRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
 class LeadServiceBeanTest {
-    @Autowired
-    private ApplicationContext context;
+  @Autowired private ApplicationContext context;
 
-    @Test
-    void shouldCreateLeadServiceBean() {
-        LeadService service = context.getBean(LeadService.class);
-        assertThat(service).isNotNull();
-    }
+  @Test
+  void shouldCreateLeadServiceBean() {
+    LeadService service = context.getBean(LeadService.class);
+    assertThat(service).isNotNull();
+  }
 
-    @Test
-    void shouldCreateLeadRepositoryBean() {
-        LeadRepository<Lead> repo = context.getBean(LeadRepository.class);
-        assertThat(repo).isNotNull();
-    }
+  @Test
+  void shouldCreateLeadRepositoryBean() {
+    LeadRepository<Lead> repo = context.getBean(LeadRepository.class);
+    assertThat(repo).isNotNull();
+  }
 
-    @Test
-    void shouldInjectLeadRepositoryIntoService() {
-        LeadService service = context.getBean(LeadService.class);
-        // Проверяем что DI работает: service использует repository
-        assertThat(service.findAll()).isEmpty();
-    }
+  @Test
+  void shouldInjectLeadRepositoryIntoService() {
+    LeadService service = context.getBean(LeadService.class);
+    // Проверяем что DI работает: service использует repository
+    assertThat(service.findAll()).isEmpty();
+  }
 }

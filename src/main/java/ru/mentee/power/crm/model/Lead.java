@@ -4,76 +4,57 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 import ru.mentee.power.crm.domain.Address;
 import ru.mentee.power.crm.domain.Contact;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-import java.util.Objects;
-
 public record Lead(
-
-        UUID id,
-
-        Contact contact,
-
-        String company,
-
-
-        @NotNull(message = "Статус обязателен")
-        LeadStatus status,
-
-
-        @NotBlank(message = "Email обязателен")
-        @Email(message = "Некорректный формат email")
+    UUID id,
+    Contact contact,
+    String company,
+    @NotNull(message = "Статус обязателен") LeadStatus status,
+    @NotBlank(message = "Email обязателен") @Email(message = "Некорректный формат email")
         String email,
+    @NotBlank(message = "Телефон обязателен") String phone,
+    @NotBlank(message = "Имя обязательно") String name,
+    LocalDateTime createdAt) {
+  public Lead {}
 
-        @NotBlank(message = "Телефон обязателен")
-        String phone,
-
-        @NotBlank(message = "Имя обязательно")
-        String name,
-
-        LocalDateTime createdAt
-) {
-    public Lead {
+  public Lead(UUID id, Contact contact, String company, LeadStatus status) {
+    if (status == null || company == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!(status == LeadStatus.NEW
+        || status == LeadStatus.QUALIFIED
+        || status == LeadStatus.CONVERTED
+        || status == LeadStatus.CONTACTED)) {
+      throw new IllegalArgumentException();
     }
 
+    this(id, contact, company, status, "NoEmail", "NoPhone", "NoName", LocalDateTime.now());
+  }
 
-    public Lead(UUID id, Contact contact, String company, LeadStatus status) {
-        if (status == null || company == null) {
-            throw new IllegalArgumentException();
-        }
-        if (!(status == LeadStatus.NEW ||
-                status == LeadStatus.QUALIFIED ||
-                status == LeadStatus.CONVERTED ||
-                status == LeadStatus.CONTACTED)) {
-            throw new IllegalArgumentException();
-        }
-
-        this(id, contact, company, status, "NoEmail", "NoPhone", "NoName",LocalDateTime.now());
+  public Lead(UUID uuid, String email, String company, LeadStatus status) {
+    if (email == null || company == null || status == null) {
+      throw new IllegalArgumentException();
     }
+    Address address = new Address("", "", "");
+    Contact contact = new Contact("", "", address);
 
-    public Lead(UUID uuid, String email, String company, LeadStatus status) {
-        if (email == null || company == null || status == null) {
-            throw new IllegalArgumentException();
-        }
-        Address address = new Address("", "", "");
-        Contact contact = new Contact("", "", address);
+    this(uuid, contact, company, status, email, "NoPhone", "NoName", LocalDateTime.now());
+  }
 
-        this(uuid, contact, company, status, email, "NoPhone", "NoName",LocalDateTime.now());
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Lead lead = (Lead) o;
+    return Objects.equals(id, lead.id);
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Lead lead = (Lead) o;
-        return Objects.equals(id, lead.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
 }
