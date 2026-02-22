@@ -1,11 +1,11 @@
+[![CI](https://github.com/reallyloud/crm/actions/workflows/ci.yml/badge.svg)](https://github.com/reallyloud/crm/actions/workflows/ci.yml)
+                            
 
-                            #
-                            # Сравнение стеков Servlet vs Spring Boot
+# Сравнение стеков Servlet vs Spring Boot
                             
 
 
-                            #
-                            ## Результаты интеграционного теста
+## Результаты интеграционного теста
 
 
 | Метрика | Servlet | Spring Boot | Комментарий |
@@ -16,8 +16,8 @@
 | Строк Java кода | ~150    | ~30         | Контраст 5:1 |
 
 
-                            #
-                            ## Вывод
+
+## Вывод
 
 
 Оба стека возвращают идентичные данные, но Spring Boot требует в 5 раз меньше кода за счёт auto-configuration. Trade-off: Spring стартует медленнее из-за инициализации IoC контейнера.

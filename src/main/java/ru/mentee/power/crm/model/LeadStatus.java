@@ -1,9 +1,9 @@
 package ru.mentee.power.crm.model;
 
 public enum LeadStatus {
-    NEW,
-    QUALIFIED,
-    CONVERTED,
-    CONTACTED,
-    DONE
+  NEW,
+  QUALIFIED,
+  CONVERTED,
+  CONTACTED,
+  DONE
 }

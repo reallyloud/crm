@@ -5,13 +5,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LeadRepository<Lead> {
-    public Lead save(Lead type);
+  public Lead save(Lead type);
 
-    public void delete(UUID uuid);
+  public void delete(UUID uuid);
 
-    public Optional<Lead> findById(UUID id);
+  public Optional<Lead> findById(UUID id);
 
-    public List<Lead> findAll();
+  public List<Lead> findAll();
 
-    public Optional<Lead> findByEmail(String email);
+  public Optional<Lead> findByEmail(String email);
 }

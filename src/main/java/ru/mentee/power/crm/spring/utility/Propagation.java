@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.spring.utility;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -7,88 +8,93 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 
-import java.util.UUID;
-
 @RequiredArgsConstructor
 @Service
 public class Propagation {
 
-    public final JpaLeadRepository leadRepository;
+  public final JpaLeadRepository leadRepository;
 
-    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED, rollbackFor = IllegalArgumentException.class)
-    public Lead propagationRequired (UUID leadId,int attempt) {
-        if (leadRepository.findById(leadId).isEmpty()) {
-            throw new IllegalArgumentException("Лида с таким id не существует");
-        }
-
-        if (attempt == 2) {
-            throw new IllegalArgumentException();
-        }
-
-        Lead lead = leadRepository.findById(leadId).get();
-
-        lead.setName("PROCESSED");
-        leadRepository.save(lead);
-        return lead;
+  @Transactional(
+      propagation = org.springframework.transaction.annotation.Propagation.REQUIRED,
+      rollbackFor = IllegalArgumentException.class)
+  public Lead propagationRequired(UUID leadId, int attempt) {
+    if (leadRepository.findById(leadId).isEmpty()) {
+      throw new IllegalArgumentException("Лида с таким id не существует");
     }
 
-    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
-    public Lead propagationRequiresNew (UUID leadId,int attempt) {
-        if (leadRepository.findById(leadId).isEmpty()) {
-            throw new IllegalArgumentException("Лида с таким id не существует");
-        }
-
-        if (attempt == 2) {
-            throw new IllegalArgumentException();
-        }
-
-        Lead lead = leadRepository.findById(leadId).get();
-
-        lead.setName("PROCESSED");
-        leadRepository.save(lead);
-        return lead;
+    if (attempt == 2) {
+      throw new IllegalArgumentException();
     }
 
-    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.MANDATORY)
-    public Lead propagationMandatory (UUID leadId,int attempt) {
-        if (leadRepository.findById(leadId).isEmpty()) {
-            throw new IllegalArgumentException("Лида с таким id не существует");
-        }
+    Lead lead = leadRepository.findById(leadId).get();
 
-        if (attempt == 2) {
-            throw new IllegalArgumentException();
-        }
+    lead.setName("PROCESSED");
+    leadRepository.save(lead);
+    return lead;
+  }
 
-        Lead lead = leadRepository.findById(leadId).get();
-
-        lead.setName("PROCESSED");
-        leadRepository.save(lead);
-        return lead;
+  @Transactional(
+      propagation = org.springframework.transaction.annotation.Propagation.REQUIRES_NEW,
+      rollbackFor = IllegalArgumentException.class)
+  public Lead propagationRequiresNew(UUID leadId, int attempt) {
+    if (leadRepository.findById(leadId).isEmpty()) {
+      throw new IllegalArgumentException("Лида с таким id не существует");
     }
 
-    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)
-    public Lead propagationRequiredIsolationCommitted (UUID leadId,int attempt) {
-        if (leadRepository.findById(leadId).isEmpty()) {
-            throw new IllegalArgumentException("Лида с таким id не существует");
-        }
-        Lead lead = leadRepository.findById(leadId).get();
-
-        lead.setName("PROCESSED");
-        leadRepository.save(lead);
-        return lead;
+    if (attempt == 2) {
+      throw new IllegalArgumentException();
     }
 
-    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED,isolation = Isolation.REPEATABLE_READ)
-    public Lead propagationRequiredIsolationRepeatable (UUID leadId,int attempt) {
-        if (leadRepository.findById(leadId).isEmpty()) {
-            throw new IllegalArgumentException("Лида с таким id не существует");
-        }
+    Lead lead = leadRepository.findById(leadId).get();
 
-        Lead lead = leadRepository.findById(leadId).get();
+    lead.setName("PROCESSED");
+    leadRepository.save(lead);
+    return lead;
+  }
 
-        lead.setName("PROCESSED");
-        leadRepository.save(lead);
-        return lead;
+  @Transactional(propagation = org.springframework.transaction.annotation.Propagation.MANDATORY)
+  public Lead propagationMandatory(UUID leadId, int attempt) {
+    if (leadRepository.findById(leadId).isEmpty()) {
+      throw new IllegalArgumentException("Лида с таким id не существует");
     }
 
+    if (attempt == 2) {
+      throw new IllegalArgumentException();
+    }
+
+    Lead lead = leadRepository.findById(leadId).get();
+
+    lead.setName("PROCESSED");
+    leadRepository.save(lead);
+    return lead;
+  }
+
+  @Transactional(
+      propagation = org.springframework.transaction.annotation.Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED)
+  public Lead propagationRequiredIsolationCommitted(UUID leadId, int attempt) {
+    if (leadRepository.findById(leadId).isEmpty()) {
+      throw new IllegalArgumentException("Лида с таким id не существует");
+    }
+    Lead lead = leadRepository.findById(leadId).get();
+
+    lead.setName("PROCESSED");
+    leadRepository.save(lead);
+    return lead;
+  }
+
+  @Transactional(
+      propagation = org.springframework.transaction.annotation.Propagation.REQUIRED,
+      isolation = Isolation.REPEATABLE_READ)
+  public Lead propagationRequiredIsolationRepeatable(UUID leadId, int attempt) {
+    if (leadRepository.findById(leadId).isEmpty()) {
+      throw new IllegalArgumentException("Лида с таким id не существует");
+    }
+
+    Lead lead = leadRepository.findById(leadId).get();
+
+    lead.setName("PROCESSED");
+    leadRepository.save(lead);
+    return lead;
+  }
 }
