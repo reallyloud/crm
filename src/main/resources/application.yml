@@ -20,6 +20,15 @@ spring:
       ddl-auto: validate
     show-sql: true
 
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+    datatype:
+      datetime:
+        write-dates-as-timestamps: false
 
 management:
   endpoints:
@@ -36,3 +45,7 @@ logging:
     org.hibernate.SQL: WARN
     org.hibernate.orm.jdbc.bind: WARN
 
+### Внешние API
+email:
+  validation:
+    base-url: ${EMAIL_VALIDATION_URL:http://localhost:8089}
