@@ -17,11 +17,7 @@ import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.mentee.power.crm.model.LeadStatus;
 
 @Entity
@@ -30,6 +26,7 @@ import ru.mentee.power.crm.model.LeadStatus;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Lead {
 
   @Id

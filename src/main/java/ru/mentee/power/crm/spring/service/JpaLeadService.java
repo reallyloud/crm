@@ -113,6 +113,17 @@ public class JpaLeadService {
     return leads;
   }
 
+  public Optional<Lead> getLeadById(UUID id) {
+    return repository.findById(id);
+  }
+
+  public Lead createLead(Lead lead) {
+    log.info("Пришел лид: {}", lead.toString());
+    lead.setStatus(LeadStatus.NEW);
+    Lead leadResult = repository.save(lead);
+    return lead;
+  }
+
   public Optional<Lead> findById(UUID id) {
     return repository.findById(id);
   }

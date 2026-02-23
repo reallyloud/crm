@@ -40,9 +40,9 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-restclient:${springBootVersion}"
     implementation "gg.jte:jte-spring-boot-starter-3:${jteVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-webmvc-test:${springBootVersion}"
+
 
     // PostgreSQL JDBC Driver (для dev и production)
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
@@ -50,6 +50,9 @@ dependencies {
 
 
     // Testing
+    testImplementation 'org.wiremock:wiremock-standalone:3.4.2'
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-webmvc-test:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-data-jpa-test:${springBootVersion}"
     testImplementation 'org.assertj:assertj-core:3.24.2'
