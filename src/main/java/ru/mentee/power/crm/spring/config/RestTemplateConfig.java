@@ -1,17 +1,15 @@
 package ru.mentee.power.crm.spring.config;
 
 import java.time.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Configuration
 public class RestTemplateConfig {
-
-  private static final Logger log = LoggerFactory.getLogger(RestTemplateConfig.class);
 
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder) {

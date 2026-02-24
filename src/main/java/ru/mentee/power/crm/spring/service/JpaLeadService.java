@@ -118,7 +118,7 @@ public class JpaLeadService {
   }
 
   public Lead createLead(Lead lead) {
-    log.info("Пришел лид: {}", lead.toString());
+    log.info("Создание нового лида из JSON: {}", lead.toString());
     lead.setStatus(LeadStatus.NEW);
     Lead leadResult = repository.save(lead);
     return lead;
