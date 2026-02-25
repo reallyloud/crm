@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.spring.service;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +19,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.model.LeadStatus;
-import ru.mentee.power.crm.spring.entity.Company;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
+import ru.mentee.power.crm.spring.client.EmailValidationResponse;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.spring.repository.JpaCompanyRepository;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
@@ -32,6 +34,7 @@ public class JpaLeadService {
   private final JpaLeadRepository repository;
   private final JpaLeadProcessor processor;
   private final JpaCompanyRepository companyRepository;
+  private final EmailValidationFeignClient emailValidationClient;
 
   /** Поиск лида по email (derived method). */
   public Optional<Lead> findByEmail(String email) {
@@ -117,11 +120,25 @@ public class JpaLeadService {
     return repository.findById(id);
   }
 
+  @Retry(name = "email-validation", fallbackMethod = "createLeadFallback")
   public Lead createLead(Lead lead) {
     log.info("Создание нового лида из JSON: {}", lead.toString());
+
+    EmailValidationResponse validation = emailValidationClient.validateEmail(lead.getEmail());
+    if (!validation.valid()) {
+      throw new IllegalArgumentException("Invalid email: " + validation.reason());
+    }
     lead.setStatus(LeadStatus.NEW);
-    Lead leadResult = repository.save(lead);
-    return lead;
+    return repository.save(lead);
+  }
+
+  // Fallback метод — вызывается после исчерпания retry попыток
+  public Lead createLeadFallback(Lead lead, Exception ex) {
+    log.warn(
+        "Email validation service unavailable after retries. "
+            + "Creating lead without validation. Error: {}",
+        ex.getMessage());
+    return repository.save(lead);
   }
 
   public Optional<Lead> findById(UUID id) {
@@ -134,32 +151,25 @@ public class JpaLeadService {
   }
 
   @Transactional
-  public void delete(UUID id) {
-    if (!repository.existsById(id)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead not found");
-    }
+  public boolean delete(UUID id) {
+    boolean isDeleted = repository.existsById(id);
     repository.deleteById(id);
+    return isDeleted;
   }
 
   @Transactional
-  public Lead update(
-      UUID id, String name, String email, String phone, String companyName, LeadStatus status) {
-    Lead lead =
-        repository
-            .findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead not found"));
-    lead.setName(name);
-    lead.setEmail(email);
-    lead.setPhone(phone);
-    lead.setStatus(status);
-    if (lead.getCompany() != null) {
-      lead.getCompany().setName(companyName);
-    } else {
-      Company company = new Company();
-      company.setName(companyName);
-      lead.setCompany(company);
+  public Optional<Lead> updateLead(UUID id, Lead updatedLead) {
+    Optional<Lead> foundLead = repository.findById(id);
+    if (foundLead.isEmpty()) {
+      return foundLead;
     }
-    return repository.save(lead);
+    Lead lead = foundLead.get();
+    lead.setName(updatedLead.getName());
+    lead.setEmail(updatedLead.getEmail());
+    lead.setPhone(updatedLead.getPhone());
+    lead.setStatus(updatedLead.getStatus());
+    repository.save(lead);
+    return Optional.of(lead);
   }
 
   public List<Lead> findLeads(String search, String status) {

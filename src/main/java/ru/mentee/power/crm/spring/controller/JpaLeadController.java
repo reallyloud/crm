@@ -92,8 +92,11 @@ public class JpaLeadController {
       model.addAttribute("leadId", id);
       return "jpa/leads/edit";
     }
-    leadService.update(
-        id, form.name(), form.email(), form.phone(), form.companyName(), form.status());
+    Company company = new Company();
+    company.setName(form.companyName());
+    Lead newLead = new Lead(form.name(), form.email(), company, form.status());
+
+    leadService.updateLead(id, newLead);
     return "redirect:/jpa/leads";
   }
 
