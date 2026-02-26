@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.entity.Company;
 import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.service.JpaLeadService;
 
 @Controller
@@ -26,6 +27,7 @@ import ru.mentee.power.crm.spring.service.JpaLeadService;
 public class JpaLeadController {
 
   private final JpaLeadService leadService;
+  private final LeadMapper leadMapper;
 
   @GetMapping
   public String listLeads(
@@ -78,26 +80,6 @@ public class JpaLeadController {
     model.addAttribute("lead", form);
     model.addAttribute("leadId", id);
     return "jpa/leads/edit";
-  }
-
-  @PostMapping("/{id}")
-  public String updateLead(
-      @PathVariable UUID id,
-      @Valid @ModelAttribute("lead") LeadForm form,
-      BindingResult result,
-      Model model) {
-    if (result.hasErrors()) {
-      model.addAttribute("lead", form);
-      model.addAttribute("leadErrors", result);
-      model.addAttribute("leadId", id);
-      return "jpa/leads/edit";
-    }
-    Company company = new Company();
-    company.setName(form.companyName());
-    Lead newLead = new Lead(form.name(), form.email(), company, form.status());
-
-    leadService.updateLead(id, newLead);
-    return "redirect:/jpa/leads";
   }
 
   @PostMapping("/{id}/delete")

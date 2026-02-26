@@ -89,19 +89,6 @@ class JpaLeadServiceIntegrationTest {
   }
 
   @Test
-  void update_shouldModifyExistingLead() {
-    UUID id = savedLead.getId();
-    Lead newLead = DataGenerator.generateRandomLead();
-
-    Lead updated = leadService.updateLead(id, newLead).get();
-
-    assertThat(updated.getName()).isEqualTo(newLead.getName());
-    assertThat(updated.getEmail()).isEqualTo(newLead.getEmail());
-    assertThat(updated.getPhone()).isEqualTo(newLead.getPhone());
-    assertThat(updated.getStatus()).isEqualTo(newLead.getStatus());
-  }
-
-  @Test
   void findLeads_shouldFilterBySearch() {
     Lead lead2 = DataGenerator.generateRandomLead();
     lead2.setEmail("unique-search-test@example.com");
