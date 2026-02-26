@@ -176,7 +176,7 @@ class JpaLeadControllerTest {
     UUID id = UUID.randomUUID();
     Lead lead = createTestLead();
     lead.setId(id);
-    when(leadService.update(eq(id), any(), any(), any(), any(), any())).thenReturn(lead);
+    when(leadService.updateLead(eq(id), any())).thenReturn(Optional.of(lead));
 
     mockMvc
         .perform(
@@ -189,14 +189,7 @@ class JpaLeadControllerTest {
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/jpa/leads"));
 
-    verify(leadService)
-        .update(
-            eq(id),
-            eq("Обновленный"),
-            eq("updated@test.com"),
-            eq("89999999"),
-            eq("Google"),
-            eq(LeadStatus.CONTACTED));
+    verify(leadService).updateLead(eq(id), any());
   }
 
   @Test

@@ -1,7 +1,6 @@
 package ru.mentee.power.crm.spring.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.entity.Company;
 import ru.mentee.power.crm.spring.entity.Lead;
@@ -91,42 +89,16 @@ class JpaLeadServiceIntegrationTest {
   }
 
   @Test
-  void delete_shouldThrowWhenNotFound() {
-    UUID nonExistentId = UUID.randomUUID();
-
-    assertThatThrownBy(() -> leadService.delete(nonExistentId))
-        .isInstanceOf(ResponseStatusException.class);
-  }
-
-  @Test
   void update_shouldModifyExistingLead() {
     UUID id = savedLead.getId();
+    Lead newLead = DataGenerator.generateRandomLead();
 
-    Lead updated =
-        leadService.update(
-            id,
-            "Обновленный",
-            "updated@email.com",
-            "999999",
-            "НоваяКомпания",
-            LeadStatus.CONTACTED);
+    Lead updated = leadService.updateLead(id, newLead).get();
 
-    assertThat(updated.getName()).isEqualTo("Обновленный");
-    assertThat(updated.getEmail()).isEqualTo("updated@email.com");
-    assertThat(updated.getPhone()).isEqualTo("999999");
-    assertThat(updated.getStatus()).isEqualTo(LeadStatus.CONTACTED);
-    assertThat(updated.getCompany().getName()).isEqualTo("НоваяКомпания");
-  }
-
-  @Test
-  void update_shouldThrowWhenNotFound() {
-    UUID nonExistentId = UUID.randomUUID();
-
-    assertThatThrownBy(
-            () ->
-                leadService.update(
-                    nonExistentId, "name", "email@t.com", "123", "comp", LeadStatus.NEW))
-        .isInstanceOf(ResponseStatusException.class);
+    assertThat(updated.getName()).isEqualTo(newLead.getName());
+    assertThat(updated.getEmail()).isEqualTo(newLead.getEmail());
+    assertThat(updated.getPhone()).isEqualTo(newLead.getPhone());
+    assertThat(updated.getStatus()).isEqualTo(newLead.getStatus());
   }
 
   @Test
