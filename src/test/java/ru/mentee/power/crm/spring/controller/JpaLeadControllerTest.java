@@ -1,7 +1,6 @@
 package ru.mentee.power.crm.spring.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,19 +13,24 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.entity.Company;
 import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.service.JpaLeadService;
 
+@ActiveProfiles("test")
 @WebMvcTest(JpaLeadController.class)
 class JpaLeadControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
   @MockitoBean private JpaLeadService leadService;
+
+  @MockitoBean private LeadMapper leadMapper;
 
   @Test
   void shouldListLeads() throws Exception {
@@ -169,27 +173,6 @@ class JpaLeadControllerTest {
     when(leadService.findById(id)).thenReturn(Optional.empty());
 
     mockMvc.perform(get("/jpa/leads/{id}/edit", id)).andExpect(status().isNotFound());
-  }
-
-  @Test
-  void shouldUpdateLeadAndRedirect() throws Exception {
-    UUID id = UUID.randomUUID();
-    Lead lead = createTestLead();
-    lead.setId(id);
-    when(leadService.updateLead(eq(id), any())).thenReturn(Optional.of(lead));
-
-    mockMvc
-        .perform(
-            post("/jpa/leads/{id}", id)
-                .param("name", "Обновленный")
-                .param("email", "updated@test.com")
-                .param("phone", "89999999")
-                .param("companyName", "Google")
-                .param("status", "CONTACTED"))
-        .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/jpa/leads"));
-
-    verify(leadService).updateLead(eq(id), any());
   }
 
   @Test

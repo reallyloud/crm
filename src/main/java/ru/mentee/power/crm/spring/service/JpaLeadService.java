@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,16 +21,20 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.client.EmailValidationResponse;
+import ru.mentee.power.crm.spring.dto.LeadResponse;
+import ru.mentee.power.crm.spring.dto.UpdateLeadRequest;
 import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.repository.JpaCompanyRepository;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class JpaLeadService {
 
   private static final Logger log = LoggerFactory.getLogger(JpaLeadService.class);
 
+  private final LeadMapper leadMapper;
   private final JpaLeadRepository repository;
   private final JpaLeadProcessor processor;
   private final JpaCompanyRepository companyRepository;
@@ -158,18 +162,15 @@ public class JpaLeadService {
   }
 
   @Transactional
-  public Optional<Lead> updateLead(UUID id, Lead updatedLead) {
+  public Optional<LeadResponse> updateLead(UUID id, UpdateLeadRequest request) {
     Optional<Lead> foundLead = repository.findById(id);
     if (foundLead.isEmpty()) {
-      return foundLead;
+      return Optional.empty();
     }
     Lead lead = foundLead.get();
-    lead.setName(updatedLead.getName());
-    lead.setEmail(updatedLead.getEmail());
-    lead.setPhone(updatedLead.getPhone());
-    lead.setStatus(updatedLead.getStatus());
+    leadMapper.updateEntity(request, lead);
     repository.save(lead);
-    return Optional.of(lead);
+    return Optional.of(leadMapper.toResponse(lead));
   }
 
   public List<Lead> findLeads(String search, String status) {

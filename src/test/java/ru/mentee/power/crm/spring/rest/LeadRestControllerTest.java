@@ -17,7 +17,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.mentee.power.crm.spring.dto.LeadResponse;
 import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.service.JpaLeadService;
 
 @WebMvcTest(LeadRestController.class)
@@ -25,13 +27,15 @@ class LeadRestControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
+  @MockitoBean private LeadMapper leadMapper;
+
   @MockitoBean private JpaLeadService leadService;
 
   @Test
   void shouldReturn200_whenGetAllLeads() throws Exception {
     List<Lead> leads = List.of(generateRandomLead(), generateRandomLead(), generateRandomLead());
+    List<LeadResponse> response = leads.stream().map(leadMapper::toResponse).toList();
 
-    when(leadService.findAll()).thenReturn(leads);
     mockMvc
         .perform(get("/api/leads"))
         .andExpect(status().isOk())
