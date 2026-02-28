@@ -86,6 +86,8 @@ dependencies {
     // H2 Console (требуется для Spring Boot 4.0+)
     implementation "org.springframework.boot:spring-boot-h2console:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+
 
     implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
     implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
