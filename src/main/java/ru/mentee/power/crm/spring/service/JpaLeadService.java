@@ -24,6 +24,7 @@ import ru.mentee.power.crm.spring.client.EmailValidationResponse;
 import ru.mentee.power.crm.spring.dto.LeadResponse;
 import ru.mentee.power.crm.spring.dto.UpdateLeadRequest;
 import ru.mentee.power.crm.spring.entity.Lead;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
 import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.repository.JpaCompanyRepository;
 import ru.mentee.power.crm.spring.repository.JpaLeadRepository;
@@ -120,8 +121,10 @@ public class JpaLeadService {
     return leads;
   }
 
-  public Optional<Lead> getLeadById(UUID id) {
-    return repository.findById(id);
+  public Lead getLeadById(UUID id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
   }
 
   @Retry(name = "email-validation", fallbackMethod = "createLeadFallback")
@@ -156,18 +159,20 @@ public class JpaLeadService {
 
   @Transactional
   public boolean delete(UUID id) {
-    boolean isDeleted = repository.existsById(id);
+    boolean exists = repository.existsById(id);
+    if (!exists) {
+      throw new EntityNotFoundException("Lead", id.toString());
+    }
     repository.deleteById(id);
-    return isDeleted;
+    return true;
   }
 
   @Transactional
   public Optional<LeadResponse> updateLead(UUID id, UpdateLeadRequest request) {
-    Optional<Lead> foundLead = repository.findById(id);
-    if (foundLead.isEmpty()) {
-      return Optional.empty();
-    }
-    Lead lead = foundLead.get();
+    Lead lead =
+        repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
     leadMapper.updateEntity(request, lead);
     repository.save(lead);
     return Optional.of(leadMapper.toResponse(lead));
