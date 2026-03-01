@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.mentee.power.crm.testHelpClasses.DataGenerator.generateRandomLead;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ class LeadRestControllerTest {
 
   @Test
   void shouldReturn404_whenGetNonExistentLead() throws Exception {
-    when(leadService.getLeadById(any())).thenReturn(Optional.empty());
+    when(leadService.getLeadById(any())).thenReturn(null);
     mockMvc.perform(get("/api/leads/" + UUID.randomUUID())).andExpect(status().isNotFound());
   }
 
