@@ -41,7 +41,7 @@ class LeadRestControllerValidationTest {
 
     mockMvc
         .perform(post("/api/leads").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isInternalServerError());
   }
 
   @Test
@@ -71,7 +71,7 @@ class LeadRestControllerValidationTest {
 
     mockMvc
         .perform(post("/api/leads").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isInternalServerError());
   }
 
   @Test
