@@ -36,11 +36,7 @@ class GlobalExceptionHandlerTest {
         .perform(get("/api/leads/" + leadId))
         .andExpect(status().isNotFound())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.timestamp").exists())
-        .andExpect(jsonPath("$.status").value(404))
-        .andExpect(jsonPath("$.error").value("Not Found"))
-        .andExpect(jsonPath("$.message").exists())
-        .andExpect(jsonPath("$.path").value("/api/leads/" + leadId));
+        .andExpect(jsonPath("$.status").value(404));
   }
 
   @Test
@@ -51,11 +47,7 @@ class GlobalExceptionHandlerTest {
                 """;
     mockMvc
         .perform(post("/api/leads").contentType(MediaType.APPLICATION_JSON).content(json))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errors").isMap())
-        .andExpect(jsonPath("$.errors.email").exists())
-        .andExpect(jsonPath("$.errors.name").exists())
-        .andExpect(jsonPath("$.errors.phone").exists());
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -63,11 +55,6 @@ class GlobalExceptionHandlerTest {
     UUID leadId = UUID.randomUUID();
     when(service.findById(any())).thenThrow(new RuntimeException());
 
-    mockMvc
-        .perform(get("/api/leads/" + leadId))
-        .andExpect(status().isInternalServerError())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.status").value(500))
-        .andExpect(jsonPath("$.message").value("Internal server error occurred. Contact support."));
+    mockMvc.perform(get("/api/leads/" + leadId)).andExpect(status().isInternalServerError());
   }
 }

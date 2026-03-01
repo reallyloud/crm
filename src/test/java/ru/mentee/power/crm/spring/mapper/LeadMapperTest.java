@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
-import ru.mentee.power.crm.spring.dto.LeadResponse;
+import ru.mentee.power.crm.spring.dto.generated.CreateLeadRequest;
+import ru.mentee.power.crm.spring.dto.generated.LeadResponse;
 import ru.mentee.power.crm.spring.entity.Lead;
 import ru.mentee.power.crm.testHelpClasses.DataGenerator;
 
@@ -20,7 +20,7 @@ class LeadMapperTest {
 
   @Test
   void shouldMapCreateRequestToEntity_whenValidData() {
-    CreateLeadRequest request = new CreateLeadRequest("Oleg", "oleg@amgil.com", "89684396");
+    CreateLeadRequest request = new CreateLeadRequest("oleg@amgil.com", "Oleg", "89684396");
     Lead lead = leadMapper.toEntity(request);
     assertThat(lead.getName()).isEqualTo("Oleg");
     assertThat(lead.getEmail()).isEqualTo("oleg@amgil.com");
@@ -33,9 +33,9 @@ class LeadMapperTest {
     Lead lead = DataGenerator.generateRandomLead();
     lead.setId(UUID.randomUUID());
     LeadResponse response = leadMapper.toResponse(lead);
-    assertThat(response.id()).isEqualTo(lead.getId());
-    assertThat(response.email()).isEqualTo(lead.getEmail());
-    assertThat(response.phone()).isEqualTo(lead.getPhone());
-    assertThat(response.name()).isEqualTo(lead.getName());
+    assertThat(response.getId()).isEqualTo(lead.getId());
+    assertThat(response.getEmail()).isEqualTo(lead.getEmail());
+    assertThat(response.getPhone()).isEqualTo(lead.getPhone());
+    assertThat(response.getName()).isEqualTo(lead.getName());
   }
 }
