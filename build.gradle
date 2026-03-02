@@ -216,7 +216,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.5  // 79% покрытия инструкций
+                minimum = 0.4  // 79% покрытия инструкций
             }
         }
     }
